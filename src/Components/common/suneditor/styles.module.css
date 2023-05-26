@@ -1,0 +1,83 @@
+/* editor */
+.toolbarContainer {
+}
+.editor {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  line-height: 130%;
+  font-size: 14px;
+  color: #181818;
+}
+
+.editor span {
+  line-height: 130%;
+}
+
+.editor ul,
+.editor ol {
+  margin: 0;
+  padding: 0;
+}
+.editor img {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+.editor video {
+  max-width: 100%;
+}
+
+.editor h2,
+.editor h2 span {
+  font-size: 40px;
+  line-height: 130%;
+  font-weight: 400;
+}
+.editor h3,
+.editor h3 span {
+  font-size: 25px;
+  line-height: 130%;
+  font-weight: 400;
+
+}
+.editor h4,
+.editor h4 span {
+  font-size: 20px;
+  line-height: 130%;
+  font-weight: 400;
+
+}
+.editor a {
+  text-decoration: underline;
+  color: -webkit-link;
+}
+.editor a > span {
+  text-decoration: underline;
+}
+
+.editor table td {
+  vertical-align: top;
+}
+.editor :global(.__se__tag__bg__color) {
+  border-radius: 0px;
+  padding: 30px;
+}
+
+@media (max-width: 768px) {
+  .editor h2,
+  .editor h2 span {
+    font-size: 25px;
+    line-height: 130%;
+  }
+  .editor h3,
+  .editor h3 span {
+    font-size: 20px;
+    line-height: 130%;
+  }
+  .editor h4,
+  .editor h4 span {
+    font-size: 15px;
+    line-height: 130%;
+  }
+}
