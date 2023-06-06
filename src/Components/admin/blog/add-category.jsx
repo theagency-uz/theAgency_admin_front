@@ -47,7 +47,7 @@ const AddCategory = ({ handleSubmit, category }) => {
       if (result.status === 200) {
         toast.success(category ? "Категория обновлена!" : "Категория добавлена!");
         if (result.id) {
-          router.push(`/admin/blogs/category/add-category?id=${result.id}`);
+          router.push(`/blogs/category/add-category?id=${result.id}`);
         }
       }
     },

@@ -6,7 +6,7 @@ import Link from "next/link";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-import { DashboardLayout } from "src/layout/admin";
+import { DashboardLayout } from "src/layout";
 import TableToolbar from "src/Components/admin/common/table-toolbar";
 import DataTable from "src/Components/admin/common/datatables";
 import Loading from "src/Components/admin/common/Loading";
@@ -100,7 +100,7 @@ const Blogs = () => {
           return (
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
               <Button sx={{ padding: "5px" }}>
-                <Link href={`/admin/blogs/add-blog?id=${row.id}`} passHref>
+                <Link href={`/blogs/add-blog?id=${row.id}`} passHref>
                   <EditIcon />
                 </Link>
               </Button>
@@ -171,7 +171,7 @@ const Blogs = () => {
         }}
       >
         <Container maxWidth={false}>
-          <TableToolbar handleSearch={handleSearch} title={"Статьи"} link="/admin/blogs/add-blog" />
+          <TableToolbar handleSearch={handleSearch} title={"Статьи"} link="/blogs/add-blog" />
           <DataTable data={blogs} columns={columns} handleDelete={handleDelete} />
         </Container>
       </Box>

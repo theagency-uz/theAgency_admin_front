@@ -101,7 +101,6 @@ async function addArticle({
   shortDescription,
   fullDescription,
   previewImage,
-  mainImage,
   category,
   userId,
   isActive,
@@ -126,11 +125,6 @@ async function addArticle({
       formData.append("previewImage", previewImage.file);
     } else {
       formData.append("previewImage", previewImage);
-    }
-    if (mainImage.file) {
-      formData.append("image", mainImage.file);
-    } else {
-      formData.append("image", mainImage);
     }
 
     const { data } = await http.post(baseUrl + "/articles", formData);
@@ -159,7 +153,6 @@ async function updateArticle({
   shortDescription,
   fullDescription,
   previewImage,
-  mainImage,
   category,
   userId,
   isActive,
@@ -185,11 +178,7 @@ async function updateArticle({
     } else {
       formData.append("previewImage", previewImage);
     }
-    if (mainImage.file) {
-      formData.append("image", mainImage.file);
-    } else {
-      formData.append("image", mainImage);
-    }
+
     const { data } = await http.put(baseUrl + "/articles/" + id, formData);
     data.status = 200;
     return data;

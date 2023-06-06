@@ -5,41 +5,16 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
-import Layout from "src/layout";
-import Loading from "src/Components/common/Loading";
-import shimmer from "src/utils/shimmer";
+import { DashboardLayout } from "src/layout";
+
 import Seo from "src/Components/common/Seo";
 
-const NotFound = ({ system, ...props }) => {
+const NotFound = ({ ...props }) => {
 
   const theme = useTheme();
-  const Router = useRouter();
-
-
-  if (typeof window !== "undefined") {
-    const isAdmin = window.location.pathname.startsWith("/admin");
-    const path = window.location.pathname;
-    if (path.startsWith("/ru")) {
-      Router.push("/");
-      return null;
-    }
-    if (isAdmin) {
-      Router.replace("/admin/404");
-    }
-  }
-
-
-
 
   return (
     <>
-      <Seo
-        title={"404"}
-        description={
-          "Parfum gallery — эксклюзивная сеть официальных магазинов парфюмерии и косметики от мировых брендов в Узбекистане. 100% гарантия оригинала. Широкий ассортимент. 8 магазинов в Ташкенте. Страница не найдена."
-        }
-        siteName={system["site_name"]}
-      />
       <Box
         component="main"
         sx={{
@@ -95,8 +70,7 @@ const NotFound = ({ system, ...props }) => {
                 height="50"
                 alt="Under development"
                 src="/static/images/undraw_page_not_found_su7k.svg"
-                placeholder="blur"
-                blurDataURL={shimmer}
+
               />
             </Box>
             <Link href="/" passHref>
@@ -117,7 +91,7 @@ const NotFound = ({ system, ...props }) => {
 
 
 NotFound.getLayout = (page) => {
-  return <Layout>{page}</Layout>;
+  return <DashboardLayout>{page}</DashboardLayout>;
 };
 
 export default NotFound;

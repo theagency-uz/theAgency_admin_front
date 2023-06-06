@@ -23,11 +23,6 @@ import { toast } from "react-toastify";
 
 import Flag from "src/Components/admin/common/flag";
 import ImageUpload from "src/Components/admin/common/imageUpload";
-// import Editor from "src/Components/common/editor";
-
-const Editor = lazy(() => import("src/Components/common/editor"), {
-  ssr: false,
-});
 
 import { TabContext, TabList } from "@mui/lab";
 import Link from "next/link";
@@ -38,14 +33,9 @@ const AddBlog = ({ handleSubmit, blog, categories }) => {
   const router = useRouter();
   const [formLoading, setFormLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState(blog?.previewImage || "");
-  const [mainImage, setMainImage] = useState(blog?.mainImage || "");
   const [descriptionRu, setDescriptionRu] = useState(blog?.fullDescription.ru || []);
   const [descriptionUz, setDescriptionUz] = useState(blog?.fullDescription.uz || []);
   const [descriptionEn, setDescriptionEn] = useState(blog?.fullDescription.en || []);
-
-  const [tgDescriptionRu, setTgDescriptionRu] = useState(blog?.tgDescription?.ru || "");
-  const [tgDescriptionUz, setTgDescriptionUz] = useState(blog?.tgDescription?.uz || "");
-  const [tgDescriptionEn, setTgDescriptionEn] = useState(blog?.tgDescription?.en || "");
 
   const [categoryOptions, setCategoryOptions] = useState(
     categories.map((c) => {
@@ -63,7 +53,6 @@ const AddBlog = ({ handleSubmit, blog, categories }) => {
       slug: blog?.slug || "",
       category: categoryOptions.find((c) => c.id === blog?.articleCategoryId),
       isActive: blog?.isActive || false,
-      isTg: blog?.isTg === false ? false : blog?.isTg || false,
       isNewPage: (blog?.isNewPage === false ? false : blog?.isNewPage) || false,
     },
     validationSchema: Yup.object({
@@ -76,7 +65,6 @@ const AddBlog = ({ handleSubmit, blog, categories }) => {
       shortDescriptionEn: Yup.string(),
       category: Yup.object().required("Категория обязательное поле"),
       isActive: Yup.boolean(),
-      isTg: Yup.boolean(),
       isNewPage: Yup.boolean(),
     }),
     validateOnChange: (e) => {},
@@ -91,12 +79,10 @@ const AddBlog = ({ handleSubmit, blog, categories }) => {
       shortDescriptionEn,
       category,
       isActive,
-      isTg,
       isNewPage,
     }) => {
       setFormLoading(true);
       const result = await handleSubmit({
-        isTg,
         isNewPage,
         name: { ru: nameRu, uz: nameUz, en: nameEn },
         slug,
@@ -106,9 +92,7 @@ const AddBlog = ({ handleSubmit, blog, categories }) => {
           en: shortDescriptionEn,
         },
         fullDescription: { ru: descriptionRu, uz: descriptionUz, en: descriptionEn },
-        tgDescription: { ru: tgDescriptionRu, uz: tgDescriptionUz, en: tgDescriptionEn },
         previewImage,
-        mainImage,
         category: category.id,
         isActive: isActive,
       });
@@ -122,7 +106,7 @@ const AddBlog = ({ handleSubmit, blog, categories }) => {
       if (result.status === 200) {
         toast.success(blog ? "Статья обновлена!" : "Статья создана!");
         if (result.id) {
-          router.push(`/admin/blogs/add-blog?id=${result.id}`);
+          router.push(`/blogs/add-blog?id=${result.id}`);
         }
       } else {
         console.log(result?.data || result);
@@ -153,7 +137,7 @@ const AddBlog = ({ handleSubmit, blog, categories }) => {
           <CardContent>
             {blog ? (
               <Box>
-                <a href={"/articles/preview/" + blog?.slug} target="_blank" rel="noreferrer">
+                <a href={"/blogs/preview?slug=" + blog?.slug} target="_blank" rel="noreferrer">
                   <Button sx={{ fontSize: "20px" }}>
                     <LinkIcon sx={{ marginRight: "10px" }} /> Превью статьи
                   </Button>
@@ -291,11 +275,6 @@ const AddBlog = ({ handleSubmit, blog, categories }) => {
                 onChange={(file) => setPreviewImage({ file: file })}
                 title={"Загрузить картинку превью"}
               />
-              <ImageUpload
-                image={mainImage}
-                onChange={(file) => setMainImage(file ? { file: file } : "")}
-                title={"Загрузить главную картинку"}
-              />
             </Box>
 
             <Box sx={{ width: "100%", typography: "body1", marginBottom: "20px" }}>
@@ -411,95 +390,6 @@ const AddBlog = ({ handleSubmit, blog, categories }) => {
                 <Zoom in={fullTab == 3} value={3} hidden={fullTab != 3}>
                   <Box sx={{ overflow: "visible" }}>
                     <SunEditor onChange={setDescriptionEn} value={descriptionEn} />
-                    {/* <Editor lang={"en"} onChange={setDescriptionEn} value={descriptionEn} /> */}
-                  </Box>
-                </Zoom>
-              </TabContext>
-            </Box>
-
-            <FormControlLabel
-              control={
-                <Switch checked={formik.values.isTg} onChange={formik.handleChange} name="isTg" />
-              }
-              label="Акция для телеграм бота"
-            />
-
-            <Box
-              sx={{
-                width: "100%",
-                typography: "body1",
-                display: formik.values.isTg ? "block" : "none",
-              }}
-            >
-              <p>Описание</p>
-              <p>
-                * оберните текст в &lt;b&gt;<b>текст</b>&lt;/b&gt; - для жирности
-              </p>
-              <p>
-                * оберните текст в &lt;i&gt;<i>текст</i>&lt;/i&gt; - для курсива
-              </p>
-              <p>
-                * оберните текст в &lt;a href=&quot;ссылка&quot;&gt;<i>текст</i>&lt;/a&gt; - для
-                ссылки
-              </p>
-              <TabContext value={value}>
-                <Box sx={{}}>
-                  <TabList
-                    onChange={handleChange}
-                    aria-label="lab API tabs example"
-                    sx={{
-                      backgroundColor: "rgba(0,0,0,0.1)",
-                      width: "fit-content",
-                      borderRadius: "8px",
-                    }}
-                  >
-                    <Tab icon={<Flag code="RU" />} value="1" />
-                    <Tab icon={<Flag code="UZ" />} value="2" />
-                    <Tab icon={<Flag code="GB" />} value="3" />
-                  </TabList>
-                </Box>
-                <Zoom in={value == 1} value={1} hidden={value != 1}>
-                  <Box>
-                    {/* <Editor lang={"ru"} onChange={setDescriptionRu} value={descriptionRu} /> */}
-                    <TextareaAutosize
-                      aria-label="empty textarea"
-                      placeholder="Описание"
-                      style={{ width: "100%" }}
-                      onChange={(e) => {
-                        setTgDescriptionRu(e.target.value);
-                      }}
-                      value={tgDescriptionRu}
-                      minRows="5"
-                    />
-                  </Box>
-                </Zoom>
-                <Zoom in={value == 2} value={2} hidden={value != 2}>
-                  <Box>
-                    {/* <Editor lang={"uz"} onChange={setDescriptionUz} value={descriptionUz} /> */}
-                    <TextareaAutosize
-                      aria-label="empty textarea"
-                      placeholder="Описание"
-                      style={{ width: "100%" }}
-                      onChange={(e) => {
-                        setTgDescriptionUz(e.target.value);
-                      }}
-                      value={tgDescriptionUz}
-                      minRows="5"
-                    />
-                  </Box>
-                </Zoom>
-                <Zoom in={value == 3} value={3} hidden={value != 3}>
-                  <Box>
-                    <TextareaAutosize
-                      aria-label="empty textarea"
-                      placeholder="Описание"
-                      style={{ width: "100%" }}
-                      onChange={(e) => {
-                        setTgDescriptionEn(e.target.value);
-                      }}
-                      value={tgDescriptionEn}
-                      minRows="5"
-                    />
                     {/* <Editor lang={"en"} onChange={setDescriptionEn} value={descriptionEn} /> */}
                   </Box>
                 </Zoom>

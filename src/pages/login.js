@@ -43,7 +43,7 @@ const Login = () => {
       if (result.status === 200) {
         toast.success("User logged in!");
         setUser(auth.getUser());
-        router.push("/admin");
+        router.push("/");
       } else {
         toast.error(result.data);
       }
@@ -78,7 +78,7 @@ const Login = () => {
         }}
       >
         <Container maxWidth="sm">
-          <Link href="/admin" passHref>
+          <Link href="/" passHref>
             <Button startIcon={<ArrowBackIcon fontSize="small" />}>
               Дашборд
             </Button>

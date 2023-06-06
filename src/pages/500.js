@@ -1,4 +1,4 @@
-import Layout from "src/layout/site";
+import { DashboardLayout } from "src/layout";
 
 function Error500({ err = "", ...props }) {
     console.log("error: ", err);
@@ -11,6 +11,6 @@ function Error500({ err = "", ...props }) {
 }
 
 Error500.getLayout = (page) => {
-    return <Layout>{page}</Layout>;
+    return <DashboardLayout>{page}</DashboardLayout>;
 };
 export default Error500;

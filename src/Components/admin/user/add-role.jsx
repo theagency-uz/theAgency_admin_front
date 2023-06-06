@@ -52,7 +52,7 @@ const AddRole = ({ handleSubmit, role }) => {
       if (result.status === 200) {
         toast.success(role ? "Роль обновлен!" : "Роль создан!");
         if (result.id) {
-          router.push(`/admin/users/add-role?id=${result.id}`);
+          router.push(`/users/add-role?id=${result.id}`);
         }
       }
     },

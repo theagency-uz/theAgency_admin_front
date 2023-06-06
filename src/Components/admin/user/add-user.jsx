@@ -38,11 +38,6 @@ const AddUser = ({ handleSubmit, user, roles }) => {
       role: roleOptions?.find((r) => r.id === user?.userRoleId) || null,
       name: user?.name || "",
       email: user?.email || "",
-      phone: user?.phone || "",
-      city: user?.city || "",
-      street: user?.address.street || "",
-      home: user?.address.home || "",
-      flat: user?.address.flat || "",
       password: "",
       confirmPassword: "",
     },
@@ -50,11 +45,6 @@ const AddUser = ({ handleSubmit, user, roles }) => {
       name: Yup.string().max(255).required("Имя обязательное поле"),
       role: Yup.object().required("Роль обязательное поле"),
       email: Yup.string().email("Неправильный email").max(255),
-      phone: Yup.string().max(255).required("Телефон обязательное поле"),
-      city: Yup.string().max(255).required("Город обязательное поле"),
-      street: Yup.string().max(255),
-      home: Yup.string().max(255),
-      flat: Yup.string().max(255),
       password: Yup.string().max(50),
       confirmPassword: Yup.string().max(50),
     }),
@@ -73,11 +63,6 @@ const AddUser = ({ handleSubmit, user, roles }) => {
       role,
       name,
       email,
-      phone,
-      city,
-      street,
-      home,
-      flat,
       password,
       confirmPassword,
     }) => {
@@ -85,13 +70,6 @@ const AddUser = ({ handleSubmit, user, roles }) => {
         roleId: role.id,
         name,
         email,
-        phone,
-        city,
-        address: {
-          street,
-          home,
-          flat,
-        },
         password,
         confirmPassword,
         image,
@@ -105,7 +83,7 @@ const AddUser = ({ handleSubmit, user, roles }) => {
       if (result.status === 200) {
         toast.success(user ? "Пользователь обновлен!" : "Пользователь добавлен!");
         if (result.id) {
-          router.push(`/admin/users/add-user?id=${result.id}`);
+          router.push(`/users/add-user?id=${result.id}`);
         }
       }
     },
@@ -187,70 +165,7 @@ const AddUser = ({ handleSubmit, user, roles }) => {
             variant="outlined"
             inputProps={{}}
           />
-          <TextField
-            error={Boolean(formik.touched.phone && formik.errors.phone)}
-            fullWidth
-            helperText={formik.touched.phone && formik.errors.phone}
-            label="Телефон"
-            margin="normal"
-            name="phone"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            value={formik.values.phone}
-            variant="outlined"
-            inputProps={{}}
-          />
-          <TextField
-            error={Boolean(formik.touched.city && formik.errors.city)}
-            fullWidth
-            helperText={formik.touched.city && formik.errors.city}
-            label="Город"
-            margin="normal"
-            name="city"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            value={formik.values.city}
-            variant="outlined"
-            inputProps={{}}
-          />
-          <Box sx={{ display: "flex", gap: "10px" }}>
-            <TextField
-              error={Boolean(formik.touched.street && formik.errors.street)}
-              helperText={formik.touched.street && formik.errors.street}
-              label="Улица"
-              margin="normal"
-              name="street"
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              value={formik.values.street}
-              variant="outlined"
-              inputProps={{}}
-            />
-            <TextField
-              error={Boolean(formik.touched.home && formik.errors.home)}
-              helperText={formik.touched.home && formik.errors.home}
-              label="Дом"
-              margin="normal"
-              name="home"
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              value={formik.values.home}
-              variant="outlined"
-              inputProps={{}}
-            />
-            <TextField
-              error={Boolean(formik.touched.flat && formik.errors.flat)}
-              helperText={formik.touched.flat && formik.errors.flat}
-              label="Квартира"
-              margin="normal"
-              name="flat"
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              value={formik.values.flat}
-              variant="outlined"
-              inputProps={{}}
-            />
-          </Box>
+         
           {formik.values.role?.id === 1 || formik.values.role?.id === 2 ? (
             <>
               <p style={{ fontWeight: "bold", paddingTop: "20px" }}>

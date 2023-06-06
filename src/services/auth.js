@@ -1,7 +1,6 @@
 import http from "./httpService";
 import jwtDecode from "jwt-decode";
 import baseUrl from "../utils/endpoint";
-import { getCookie, setCookie } from "src/utils/cookie";
 const apiEndpoint = baseUrl + "/auth";
 const tokenKey = "token";
 http.setJwt(getJwt());
@@ -10,9 +9,8 @@ export const login = async (user) => {
   try {
     let { data: token } = await http.post(apiEndpoint, user);
     if (typeof window !== "undefined") {
-      // localStorage.setItem(tokenKey, token);
-      const user = getUserByJwt(token);
-      setCookie(tokenKey, token, user.expire);
+      localStorage.setItem(tokenKey, token);
+
       http.setJwt(token);
       // autoLogout();
 
@@ -25,9 +23,7 @@ export const login = async (user) => {
 
 export const loginWithJwt = async (jwt) => {
   if (typeof window !== "undefined") {
-    const user = getUser(token);
-    setCookie(tokenKey, token, user.expire);
-    // localStorage.setItem(tokenKey, jwt);
+    localStorage.setItem(tokenKey, jwt);
   }
 };
 
@@ -44,8 +40,7 @@ export const getUserByJwt = (jwt) => {
 export const getUser = () => {
   if (typeof window !== "undefined") {
     try {
-      // const jwt = localStorage.getItem(tokenKey);
-      const jwt = getCookie(tokenKey);
+      const jwt = localStorage.getItem(tokenKey);
       const user = jwtDecode(jwt);
       return user;
     } catch (error) {
@@ -56,22 +51,19 @@ export const getUser = () => {
 };
 export const logout = () => {
   if (typeof window !== "undefined") {
-    // localStorage.removeItem(tokenKey);
-    setCookie(tokenKey, "", -1);
-    window.location.assign("/admin/login");
+    localStorage.removeItem(tokenKey);
+    window.location.assign("/login");
   }
 };
 export const logoutUser = () => {
   if (typeof window !== "undefined") {
-    // localStorage.removeItem(tokenKey);
-    setCookie(tokenKey, "", -1);
+    localStorage.removeItem(tokenKey);
     window.location.assign("/");
   }
 };
 export function getJwt() {
   if (typeof window !== "undefined") {
-    // return localStorage.getItem(tokenKey);
-    return getCookie(tokenKey);
+    return localStorage.getItem(tokenKey);
   }
 }
 export async function sendSms({ phone, name }) {
@@ -96,8 +88,7 @@ export async function verifySms({ phone, code, name }) {
       });
 
 
-      const user = getUserByJwt(result.data.token);
-      setCookie(tokenKey, result.data.token, user.expire);
+      localStorage.setItem(tokenKey, result.data.token);
 
       http.setJwt(result.data.token);
       return result;
@@ -111,7 +102,8 @@ export async function updateJwt() {
     if (typeof window !== "undefined") {
       const { data: token } = await http.post(apiEndpoint + "/newJwt");
       const user = getUserByJwt(token);
-      setCookie(tokenKey, token, user.expire);
+      localStorage.setItem(tokenKey, token);
+
       http.setJwt(token);
       return token;
     }

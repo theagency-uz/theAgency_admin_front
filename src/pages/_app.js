@@ -91,7 +91,7 @@ const App = ({ ...props }) => {
     <CacheProvider value={emotionCache}>
       <Head>
         <meta name="robots" content="noindex" />
-        <link rel="icon" type="image/png" href={system?.["favicon"] ? imageBaseUrl + system?.["favicon"] : "/favicon.ico"} />
+        <link rel="icon" type="image/png" href={"/favicon.ico"} />
       </Head>
       <ToastContainer
         position="top-right"
@@ -110,7 +110,6 @@ const App = ({ ...props }) => {
           {getLayout(
             <Component
               {...pageProps}
-              system={system || []}
               user={user || ""}
             />
           )}

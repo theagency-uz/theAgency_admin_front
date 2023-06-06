@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Box, Container, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 
-import { DashboardLayout } from "src/layout/admin";
+import { DashboardLayout } from "src/layout";
 import AddBlogForm from "src/Components/admin/blog/add-blog";
 import Loading from "src/Components/admin/common/Loading";
 
@@ -50,7 +50,6 @@ const AddBlog = (props) => {
     fullDescription,
     tgDescription,
     previewImage,
-    mainImage,
     category,
     isActive,
     isTg,
@@ -65,7 +64,6 @@ const AddBlog = (props) => {
         shortDescription,
         fullDescription,
         previewImage,
-        mainImage,
         category,
         userId: user.id,
         isActive,
@@ -81,7 +79,6 @@ const AddBlog = (props) => {
       shortDescription,
       fullDescription,
       previewImage,
-      mainImage,
       category,
       userId: user.id,
       isActive,

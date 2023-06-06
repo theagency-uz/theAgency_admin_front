@@ -3,6 +3,7 @@
  */
 const nextConfig = {
   /* config options here */
+  output: 'export',
   images: {
     unoptimized: true,
     domains: ["spaces.parfumgallery.uz", "spaces.parfumgallery.uzundefined"],

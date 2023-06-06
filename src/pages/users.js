@@ -5,7 +5,7 @@ import Link from "next/link";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-import { DashboardLayout } from "src/layout/admin";
+import { DashboardLayout } from "src/layout";
 import TableToolbar from "src/Components/admin/common/table-toolbar";
 import DataTable from "src/Components/admin/common/datatables";
 import Loading from "src/Components/common/Loading";
@@ -56,30 +56,6 @@ const Users = () => {
         sortable: true,
       },
       {
-        grow: 2,
-        name: "Телефон",
-        selector: (row) => row.phone,
-        sortable: true,
-      },
-      {
-        grow: 2,
-        name: "Город",
-        selector: (row) => row.city,
-        sortable: true,
-      },
-      {
-        grow: 2,
-        name: "Адрес",
-        selector: (row) => {
-          if (row.address.street && row.address.home && row.address.flat) {
-            return row.address.street + ", " + row.address.home + ", " + row.address.flat;
-          } else {
-            return "";
-          }
-        },
-        sortable: true,
-      },
-      {
         grow: 0,
         name: "Роль",
         selector: (row) => row.user_role.name,
@@ -114,7 +90,7 @@ const Users = () => {
           };
           return (
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-              <Link href={`/admin/users/add-user?id=${row.id}`} passHref>
+              <Link href={`/users/add-user?id=${row.id}`} passHref>
                 <Button sx={{ padding: "5px" }}>
                   <EditIcon />
                 </Button>
@@ -193,7 +169,7 @@ const Users = () => {
           <TableToolbar
             handleSearch={handleSearch}
             title={"Пользователи"}
-            link={"/admin/users/add-user"}
+            link={"/users/add-user"}
           />
           <DataTable data={users} columns={columns} handleDelete={handleDelete} />
         </Container>

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Box, Container, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 
-import { DashboardLayout } from "src/layout/admin";
+import { DashboardLayout } from "src/layout";
 import AddUserForm from "src/Components/admin/user/add-user";
 import Loading from "src/Components/admin/common/Loading";
 
@@ -40,9 +40,6 @@ const AddUser = (props) => {
     roleId,
     name,
     email,
-    phone,
-    city,
-    address,
     password,
     confirmPassword,
     image,
@@ -52,10 +49,6 @@ const AddUser = (props) => {
         id,
         roleId,
         name,
-        email,
-        phone,
-        city,
-        address,
         password,
         confirmPassword,
         image,
@@ -71,9 +64,6 @@ const AddUser = (props) => {
       roleId,
       name,
       email,
-      phone,
-      city,
-      address,
       password,
       confirmPassword,
       image,

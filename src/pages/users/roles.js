@@ -5,7 +5,7 @@ import Link from "next/link";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-import { DashboardLayout } from "src/layout/admin";
+import { DashboardLayout } from "src/layout";
 import TableToolbar from "src/Components/admin/common/table-toolbar";
 import DataTable from "src/Components/admin/common/datatables";
 import Loading from "src/Components/common/Loading";
@@ -84,7 +84,7 @@ const Roles = () => {
           };
           return (
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-              <Link href={`/admin/users/add-role?id=${row.id}`} passHref>
+              <Link href={`/users/add-role?id=${row.id}`} passHref>
                 <Button sx={{ padding: "5px" }}>
                   <EditIcon />
                 </Button>
@@ -157,7 +157,7 @@ const Roles = () => {
           <TableToolbar
             handleSearch={handleSearch}
             title={"Роли"}
-            link={"/admin/users/add-role"}
+            link={"/users/add-role"}
           />
           <DataTable
             data={roles}

@@ -4,10 +4,11 @@
 .editor {
   font-family: "Inter";
   font-style: normal;
-  font-weight: 400;
+  font-weight: 300;
   line-height: 130%;
   font-size: 14px;
-  color: #181818;
+  color: #fff;
+  background-color: #0f0f0f;
 }
 
 .editor span {
@@ -30,23 +31,21 @@
 
 .editor h2,
 .editor h2 span {
-  font-size: 40px;
+  font-size: 50px;
   line-height: 130%;
-  font-weight: 400;
+  font-weight: 300;
 }
 .editor h3,
 .editor h3 span {
-  font-size: 25px;
+  font-size: 30px;
   line-height: 130%;
-  font-weight: 400;
-
+  font-weight: 300;
 }
 .editor h4,
 .editor h4 span {
   font-size: 20px;
   line-height: 130%;
-  font-weight: 400;
-
+  font-weight: 300;
 }
 .editor a {
   text-decoration: underline;

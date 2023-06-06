@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Box, Container, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 
-import { DashboardLayout } from "src/layout/admin";
+import { DashboardLayout } from "src/layout";
 import AddBlogCategoryForm from "src/Components/admin/blog/add-category";
 import Loading from "src/Components/admin/common/Loading";
 

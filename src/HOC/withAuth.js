@@ -10,10 +10,10 @@ const withAuth = (WrappedComponent) => {
     useEffect(() => {
       const user = auth.getUser();
       setUser(user);
-      // if no accessToken was found,then we redirect to "/admin/login" page.
+      // if no accessToken was found,then we redirect to "/login" page.
       if (!user || user.userRoleId > 2) {
         setVerified(false);
-        Router.replace("/admin/login");
+        Router.replace("/login");
       } else {
         setVerified(true);
       }
