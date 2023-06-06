@@ -39,9 +39,7 @@ const Article = () => {
                     backgroundColor: "#0F0F0F"
                 }}
             >
-                <Container maxWidth={false}>
-                    <EditorContent content={article?.fullDescription?.ru} />
-                </Container>
+                <EditorContent content={article?.fullDescription?.ru} />
             </Box>
         </>
     );
