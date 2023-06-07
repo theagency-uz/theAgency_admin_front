@@ -17,368 +17,307 @@ import { postEditor } from "src/services/editor";
 import Loading from "../Loading";
 
 export default function SunEditor({ value = "", onChange }) {
-  const editorRef = useRef();
   const [plugins, setPlugins] = useState();
-  const [colorPicker, setColorPicker] = useState();
 
   useEffect(() => {
     async function importFunc() {
-      const { default: tempColorPicker } = await import(
-        "suneditor/src/plugins/modules/_colorPicker"
-      );
-      setColorPicker(tempColorPicker);
+      const { default: colorPicker } = await import("suneditor/src/plugins/modules/_colorPicker");
 
       const tempPlugins = await import("suneditor/src/plugins");
-      setPlugins(tempPlugins);
-    }
-    importFunc();
-  }, []);
 
-  /*  */
-  let bgColor;
-  let tableAlign;
-  if (colorPicker) {
-    bgColor = {
-      name: "bgColor",
-      display: "submenu",
-      innerHTML: "фон",
-      add: function (core, targetElement) {
-        core.addModule([colorPicker]);
-        const rangeTag = core.util.createElement("DIV");
-        core.util.addClass(rangeTag, "__se__tag__bg__color");
-        const context = core.context;
-        context.bgColor = {
-          rangeTag: rangeTag,
-          previewEl: null,
-          colorInput: null,
-          colorList: null,
-        };
+      let bgColor;
+      let tableAlign;
 
-        /** set submenu */
-        let listDiv = this.setSubmenu(core);
-        context.bgColor.colorInput = listDiv.querySelector("._se_color_picker_input");
+      bgColor = {
+        name: "bgColor",
+        display: "submenu",
+        innerHTML: "фон",
+        add: function (core, targetElement) {
+          core.addModule([colorPicker]);
+          const rangeTag = core.util.createElement("DIV");
+          core.util.addClass(rangeTag, "__se__tag__bg__color");
+          const context = core.context;
+          context.bgColor = {
+            rangeTag: rangeTag,
+            previewEl: null,
+            colorInput: null,
+            colorList: null,
+          };
 
-        /** add event listeners */
-        context.bgColor.colorInput.addEventListener("keyup", this.onChangeInput.bind(core));
-        listDiv
-          .querySelector("._se_color_picker_submit")
-          .addEventListener("click", this.submit.bind(core));
-        listDiv
-          .querySelector("._se_color_picker_remove")
-          .addEventListener("click", this.remove.bind(core));
-        listDiv.addEventListener("click", this.pickup.bind(core));
+          /** set submenu */
+          let listDiv = this.setSubmenu(core);
+          context.bgColor.colorInput = listDiv.querySelector("._se_color_picker_input");
 
-        context.bgColor.colorList = listDiv.querySelectorAll("li button");
+          /** add event listeners */
+          context.bgColor.colorInput.addEventListener("keyup", this.onChangeInput.bind(core));
+          listDiv
+            .querySelector("._se_color_picker_submit")
+            .addEventListener("click", this.submit.bind(core));
+          listDiv
+            .querySelector("._se_color_picker_remove")
+            .addEventListener("click", this.remove.bind(core));
+          listDiv.addEventListener("click", this.pickup.bind(core));
 
-        /** append target button menu */
-        core.initMenuTarget(this.name, targetElement, listDiv);
+          context.bgColor.colorList = listDiv.querySelectorAll("li button");
 
-        /** empty memory */
-        listDiv = null;
-      },
+          /** append target button menu */
+          core.initMenuTarget(this.name, targetElement, listDiv);
 
-      setSubmenu: function (core) {
-        const colorArea = core.context.colorPicker.colorListHTML;
-        const listDiv = core.util.createElement("DIV");
+          /** empty memory */
+          listDiv = null;
+        },
 
-        listDiv.className = "se-submenu se-list-layer";
-        listDiv.innerHTML = colorArea;
+        setSubmenu: function (core) {
+          const colorArea = core.context.colorPicker.colorListHTML;
+          const listDiv = core.util.createElement("DIV");
 
-        return listDiv;
-      },
+          listDiv.className = "se-submenu se-list-layer";
+          listDiv.innerHTML = colorArea;
 
-      /**
-       * @Override submenu
-       */
-      on: function () {
-        const contextPicker = this.context.colorPicker;
-        const contextBgColor = this.context.bgColor;
+          return listDiv;
+        },
 
-        contextPicker._colorInput = contextBgColor.colorInput;
-        const color = this.wwComputedStyle.backgroundColor;
-        contextPicker._defaultColor = color
-          ? this.plugins.colorPicker.isHexColor(color)
-            ? color
-            : this.plugins.colorPicker.rgb2hex(color)
-          : "#ffffff";
-        contextPicker._styleProperty = "backgroundColor";
-        contextPicker._colorList = contextBgColor.colorList;
+        /**
+         * @Override submenu
+         */
+        on: function () {
+          const contextPicker = this.context.colorPicker;
+          const contextBgColor = this.context.bgColor;
 
-        this.plugins.colorPicker.init.call(this, this.getSelectionNode(), null);
-      },
+          contextPicker._colorInput = contextBgColor.colorInput;
+          const color = this.wwComputedStyle.backgroundColor;
+          contextPicker._defaultColor = color
+            ? this.plugins.colorPicker.isHexColor(color)
+              ? color
+              : this.plugins.colorPicker.rgb2hex(color)
+            : "#ffffff";
+          contextPicker._styleProperty = "backgroundColor";
+          contextPicker._colorList = contextBgColor.colorList;
 
-      /**
-       * @Override _colorPicker
-       */
-      onChangeInput: function (e) {
-        this.plugins.colorPicker.setCurrentColor.call(this, e.target.value);
-      },
+          this.plugins.colorPicker.init.call(this, this.getSelectionNode(), null);
+        },
 
-      submit: function () {
-        this.plugins.bgColor.applyColor.call(this, this.context.colorPicker._currentColor);
-      },
+        /**
+         * @Override _colorPicker
+         */
+        onChangeInput: function (e) {
+          this.plugins.colorPicker.setCurrentColor.call(this, e.target.value);
+        },
 
-      pickup: function (e) {
-        e.preventDefault();
-        e.stopPropagation();
+        submit: function () {
+          this.plugins.bgColor.applyColor.call(this, this.context.colorPicker._currentColor);
+        },
 
-        this.plugins.bgColor.applyColor.call(this, e.target.getAttribute("data-value"));
-      },
+        pickup: function (e) {
+          e.preventDefault();
+          e.stopPropagation();
 
-      remove: function () {
-        const rangeTag = this.util.getParentElement(this.getSelectionNode(), "div");
+          this.plugins.bgColor.applyColor.call(this, e.target.getAttribute("data-value"));
+        },
 
-        if (this.util.hasClass(rangeTag, "__se__tag__bg__color")) {
-          this.detachRangeFormatElement(rangeTag, null, null, false, false);
-        }
+        remove: function () {
+          const rangeTag = this.util.getParentElement(this.getSelectionNode(), "div");
 
-        this.submenuOff();
-      },
-
-      applyColor: function (color) {
-        if (!color) return;
-
-        const rangeTag = this.util.getParentElement(this.getSelectionNode(), "div");
-
-        if (!this.util.hasClass(rangeTag, "__se__tag__bg__color")) {
-          this.context.bgColor.rangeTag.style.backgroundColor = color;
-          this.applyRangeFormatElement(this.context.bgColor.rangeTag.cloneNode(false));
-        }
-
-        // const newNode = this.util.createElement("DIV");
-        // newNode.style.backgroundColor = color;
-        // newNode.classList.add("__se__tag__bg__color");
-        // this.nodeChange(newNode, ["background-color"], null, null);
-
-        this.submenuOff();
-      },
-
-      // @Options
-      // title: "Add background",
-      // buttonClass: "",
-      // innerHTML: "black",
-
-      // // @Required
-      // // add function - It is called only once when the plugin is first run.
-      // // This function generates HTML to append and register the event.
-      // // arguments - (core : core object, targetElement : clicked button element)
-      // add: function (core, targetElement) {
-      //   const context = core.context;
-      //   const rangeTag = core.util.createElement("DIV");
-      //   core.util.addClass(rangeTag, "__se__tag__bg__black");
-      //   rangeTag.append;
-      //   // @Required
-      //   // Registering a namespace for caching as a plugin name in the context object
-      //   context.bgCommand = {
-      //     targetButton: targetElement,
-      //     tag: rangeTag,
-      //   };
-      // },
-
-      // // @Override core
-      // // Plugins with active methods load immediately when the editor loads.
-      // // Called each time the selection is moved.
-      // active: function (element) {
-      //   if (!element) {
-      //     this.util.removeClass(this.context.bgCommand.targetButton, "active");
-      //   } else if (this.util.hasClass(element, "__se__tag__bg__black")) {
-      //     this.util.addClass(this.context.bgCommand.targetButton, "active");
-      //     return true;
-      //   }
-
-      //   return false;
-      // },
-
-      // // @Required, @Override core
-      // // The behavior of the "command plugin" must be defined in the "action" method.
-      // action: function () {
-      // const rangeTag = this.util.getParentElement(this.getSelectionNode(), "div");
-
-      // if (this.util.hasClass(rangeTag, "__se__tag__bg__black")) {
-      //   this.detachRangeFormatElement(rangeTag, null, null, false, false);
-      // } else {
-      //   this.applyRangeFormatElement(this.context.bgCommand.tag.cloneNode(false));
-      // }
-      // },
-    };
-    tableAlign = {
-      name: "tableAlign",
-      display: "submenu",
-      innerHTML: ``,
-      add: function (core, targetElement) {
-        const icons = core.icons;
-        const context = core.context;
-        context.align = {
-          targetButton: targetElement,
-          _itemMenu: null,
-          _alignList: null,
-          currentAlign: "top",
-          defaultDir: "top",
-          icons: {
-            top: icons.align_left,
-            bottom: icons.align_right,
-            middle: icons.align_center,
-          },
-        };
-
-        /** set submenu */
-        let listDiv = this.setSubmenu(core);
-        let listUl = (context.align._itemMenu = listDiv.querySelector("ul"));
-
-        /** add event listeners */
-        listUl.addEventListener("click", this.pickup.bind(core));
-        context.align._alignList = listUl.querySelectorAll("li button");
-
-        /** append target button menu */
-        core.initMenuTarget(this.name, targetElement, listDiv);
-
-        /** empty memory */
-        (listDiv = null), (listUl = null);
-      },
-
-      setSubmenu: function (core) {
-        const lang = core.lang;
-        const icons = core.icons;
-        const listDiv = core.util.createElement("DIV");
-        const alignItems = ["top", "middle", "bottom"];
-
-        let html = "";
-        for (let i = 0; i < alignItems.length; i++) {
-          let item = alignItems[i];
-          html +=
-            "<li>" +
-            '<button type="button" class="se-btn-list se-btn-align" data-value="' +
-            item +
-            '" title="' +
-            item +
-            '" aria-label="' +
-            item +
-            '">' +
-            '<span class="se-list-icon">' +
-            item +
-            "</span>" +
-            "</button>" +
-            "</li>";
-        }
-
-        listDiv.className = "se-submenu se-list-layer se-list-align";
-        listDiv.innerHTML =
-          "" +
-          '<div class="se-list-inner">' +
-          '<ul class="se-list-basic">' +
-          html +
-          "</ul>" +
-          "</div>";
-
-        return listDiv;
-      },
-
-      /**
-       * @Override core
-       */
-      active: function (element) {
-        const alignContext = this.context.align;
-        const targetButton = alignContext.targetButton;
-        const target = targetButton.firstElementChild;
-
-        if (!element) {
-          this.util.changeElement(target, alignContext.icons[alignContext.defaultDir]);
-          targetButton.removeAttribute("data-focus");
-        } else if (this.util.isFormatElement(element)) {
-          const textAlign = element.style.textAlign;
-          if (textAlign) {
-            this.util.changeElement(
-              target,
-              alignContext.icons[textAlign] || alignContext.icons[alignContext.defaultDir]
-            );
-            targetButton.setAttribute("data-focus", textAlign);
-            return true;
+          if (this.util.hasClass(rangeTag, "__se__tag__bg__color")) {
+            this.detachRangeFormatElement(rangeTag, null, null, false, false);
           }
-        }
 
-        return false;
-      },
+          this.submenuOff();
+        },
 
-      /**
-       * @Override submenu
-       */
-      on: function () {
-        const alignContext = this.context.align;
-        const alignList = alignContext._alignList;
-        const currentAlign =
-          alignContext.targetButton.getAttribute("data-focus") || alignContext.defaultDir;
+        applyColor: function (color) {
+          if (!color) return;
 
-        if (currentAlign !== alignContext.currentAlign) {
-          for (let i = 0, len = alignList.length; i < len; i++) {
-            if (currentAlign === alignList[i].getAttribute("data-value")) {
-              this.util.addClass(alignList[i], "active");
-            } else {
-              this.util.removeClass(alignList[i], "active");
+          const rangeTag = this.util.getParentElement(this.getSelectionNode(), "div");
+
+          if (!this.util.hasClass(rangeTag, "__se__tag__bg__color")) {
+            this.context.bgColor.rangeTag.style.backgroundColor = color;
+            this.applyRangeFormatElement(this.context.bgColor.rangeTag.cloneNode(false));
+          }
+
+          this.submenuOff();
+        },
+      };
+      tableAlign = {
+        name: "tableAlign",
+        display: "submenu",
+        innerHTML: ``,
+        add: function (core, targetElement) {
+          const icons = core.icons;
+          const context = core.context;
+          context.align = {
+            targetButton: targetElement,
+            _itemMenu: null,
+            _alignList: null,
+            currentAlign: "top",
+            defaultDir: "top",
+            icons: {
+              top: icons.align_left,
+              bottom: icons.align_right,
+              middle: icons.align_center,
+            },
+          };
+
+          /** set submenu */
+          let listDiv = this.setSubmenu(core);
+          let listUl = (context.align._itemMenu = listDiv.querySelector("ul"));
+
+          /** add event listeners */
+          listUl.addEventListener("click", this.pickup.bind(core));
+          context.align._alignList = listUl.querySelectorAll("li button");
+
+          /** append target button menu */
+          core.initMenuTarget(this.name, targetElement, listDiv);
+
+          /** empty memory */
+          (listDiv = null), (listUl = null);
+        },
+
+        setSubmenu: function (core) {
+          const lang = core.lang;
+          const icons = core.icons;
+          const listDiv = core.util.createElement("DIV");
+          const alignItems = ["top", "middle", "bottom"];
+
+          let html = "";
+          for (let i = 0; i < alignItems.length; i++) {
+            let item = alignItems[i];
+            html +=
+              "<li>" +
+              '<button type="button" class="se-btn-list se-btn-align" data-value="' +
+              item +
+              '" title="' +
+              item +
+              '" aria-label="' +
+              item +
+              '">' +
+              '<span class="se-list-icon">' +
+              item +
+              "</span>" +
+              "</button>" +
+              "</li>";
+          }
+
+          listDiv.className = "se-submenu se-list-layer se-list-align";
+          listDiv.innerHTML =
+            "" +
+            '<div class="se-list-inner">' +
+            '<ul class="se-list-basic">' +
+            html +
+            "</ul>" +
+            "</div>";
+
+          return listDiv;
+        },
+
+        /**
+         * @Override core
+         */
+        active: function (element) {
+          const alignContext = this.context.align;
+          const targetButton = alignContext.targetButton;
+          const target = targetButton.firstElementChild;
+
+          if (!element) {
+            this.util.changeElement(target, alignContext.icons[alignContext.defaultDir]);
+            targetButton.removeAttribute("data-focus");
+          } else if (this.util.isFormatElement(element)) {
+            const textAlign = element.style.textAlign;
+            if (textAlign) {
+              this.util.changeElement(
+                target,
+                alignContext.icons[textAlign] || alignContext.icons[alignContext.defaultDir]
+              );
+              targetButton.setAttribute("data-focus", textAlign);
+              return true;
             }
           }
 
-          alignContext.currentAlign = currentAlign;
-        }
-      },
+          return false;
+        },
 
-      exchangeDir: function () {
-        const dir = this.options.rtl ? "right" : "left";
-        if (!this.context.align || this.context.align.defaultDir === dir) return;
+        /**
+         * @Override submenu
+         */
+        on: function () {
+          const alignContext = this.context.align;
+          const alignList = alignContext._alignList;
+          const currentAlign =
+            alignContext.targetButton.getAttribute("data-focus") || alignContext.defaultDir;
 
-        this.context.align.defaultDir = dir;
-        let menu = this.context.align._itemMenu;
-        let leftBtn = menu.querySelector('[data-value="left"]');
-        let rightBtn = menu.querySelector('[data-value="right"]');
-        if (leftBtn && rightBtn) {
-          const lp = leftBtn.parentElement;
-          const rp = rightBtn.parentElement;
-          lp.appendChild(rightBtn);
-          rp.appendChild(leftBtn);
-        }
-      },
+          if (currentAlign !== alignContext.currentAlign) {
+            for (let i = 0, len = alignList.length; i < len; i++) {
+              if (currentAlign === alignList[i].getAttribute("data-value")) {
+                this.util.addClass(alignList[i], "active");
+              } else {
+                this.util.removeClass(alignList[i], "active");
+              }
+            }
 
-      pickup: function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        let target = e.target;
-        let value = null;
-
-        while (!value && !/UL/i.test(target.tagName)) {
-          value = target.getAttribute("data-value");
-          target = target.parentNode;
-        }
-
-        if (!value) return;
-
-        const defaultDir = this.context.align.defaultDir;
-        const selectedFormsts = this.getSelectedElements();
-        for (let i = 0, len = selectedFormsts.length; i < len; i++) {
-          let td = selectedFormsts[i].closest("td");
-          if (td) {
-            td.removeAttribute("class");
-            td.classList.add("__se__" + value);
-            this.util.setStyle(td, "verticalAlign", value === defaultDir ? "" : value);
+            alignContext.currentAlign = currentAlign;
           }
-        }
+        },
 
-        this.effectNode = null;
-        this.submenuOff();
-        this.focus();
+        exchangeDir: function () {
+          const dir = this.options.rtl ? "right" : "left";
+          if (!this.context.align || this.context.align.defaultDir === dir) return;
 
-        // history stack
-        this.history.push(false);
-      },
-    };
-  }
+          this.context.align.defaultDir = dir;
+          let menu = this.context.align._itemMenu;
+          let leftBtn = menu.querySelector('[data-value="left"]');
+          let rightBtn = menu.querySelector('[data-value="right"]');
+          if (leftBtn && rightBtn) {
+            const lp = leftBtn.parentElement;
+            const rp = rightBtn.parentElement;
+            lp.appendChild(rightBtn);
+            rp.appendChild(leftBtn);
+          }
+        },
 
-  /* */
+        pickup: function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          let target = e.target;
+          let value = null;
+
+          while (!value && !/UL/i.test(target.tagName)) {
+            value = target.getAttribute("data-value");
+            target = target.parentNode;
+          }
+
+          if (!value) return;
+
+          const defaultDir = this.context.align.defaultDir;
+          const selectedFormsts = this.getSelectedElements();
+          for (let i = 0, len = selectedFormsts.length; i < len; i++) {
+            let td = selectedFormsts[i].closest("td");
+            if (td) {
+              td.removeAttribute("class");
+              td.classList.add("__se__" + value);
+              this.util.setStyle(td, "verticalAlign", value === defaultDir ? "" : value);
+            }
+          }
+
+          this.effectNode = null;
+          this.submenuOff();
+          this.focus();
+
+          // history stack
+          this.history.push(false);
+        },
+      };
+
+      setPlugins([...Object.values(tempPlugins), bgColor, tableAlign]);
+    }
+    importFunc();
+  }, []);
 
   const editorOptions = {
     stickyToolbar: "64px",
     className: classes.editor,
     height: 400,
-    plugins: plugins ? [...Object.values(plugins), bgColor, tableAlign] : [],
+    plugins: plugins ? plugins : [],
     buttonList: [
       ["undo", "redo"],
       ["fontSize", "font", "formatBlock"],
@@ -1420,6 +1359,7 @@ export default function SunEditor({ value = "", onChange }) {
     attributesWhitelist: {
       div: "style|class|data-.+", // Apply to all tags
       td: "style|class|data-.+", // Apply to all tags
+      span: "style|class|data-.+", // Apply to all tags
     },
     imageUploadUrl: apiBaseUrl + "/editor",
     imageGalleryUrl: apiBaseUrl + "/gallery",
@@ -1442,7 +1382,7 @@ export default function SunEditor({ value = "", onChange }) {
   // }, [value]);
 
   const onChangeHandler = (content) => {
-    onChange(content);
+    onChange(content); 
   };
 
   const handleImageUploadError = (errorMessage, result) => {
@@ -1487,7 +1427,6 @@ export default function SunEditor({ value = "", onChange }) {
     <>
       {plugins ? (
         <Editor
-          ref={editorRef}
           lang={"ru"}
           setOptions={editorOptions}
           // onImageUploadBefore={onImageUploadBefore}
