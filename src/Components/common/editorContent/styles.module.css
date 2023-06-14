@@ -30,6 +30,9 @@
   object-fit: contain;
   max-width: 100%;
 }
+.content figure {
+  max-width: 100%;
+}
 
 .content :global(.ql-video) {
   width: 100%;
