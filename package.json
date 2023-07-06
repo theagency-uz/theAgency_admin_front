@@ -37,7 +37,7 @@
     "react-data-table-component": "^7.4.7",
     "react-dom": "^18.2.0",
     "react-toastify": "^8.2.0",
-    "suneditor": "^2.44.12",
+    "suneditor": "^2.45.1",
     "suneditor-react": "^3.5.0",
     "yup": "^0.32.9"
   },

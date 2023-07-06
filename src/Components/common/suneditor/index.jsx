@@ -16,7 +16,7 @@ import apiBaseUrl from "src/utils/endpoint";
 import { postEditor } from "src/services/editor";
 import Loading from "../Loading";
 
-export default function SunEditor({ value = "", onChange }) {
+export default function SunEditor({ value = "", type = "", onChange }) {
   const [plugins, setPlugins] = useState();
 
   useEffect(() => {
@@ -315,7 +315,7 @@ export default function SunEditor({ value = "", onChange }) {
 
   const editorOptions = {
     stickyToolbar: "64px",
-    className: classes.editor,
+    className: type === "modal" ? `${classes.editor} ${classes.modal}` : classes.editor,
     height: 400,
     plugins: plugins ? plugins : [],
     buttonList: [
@@ -1382,7 +1382,7 @@ export default function SunEditor({ value = "", onChange }) {
   // }, [value]);
 
   const onChangeHandler = (content) => {
-    onChange(content); 
+    onChange(content);
   };
 
   const handleImageUploadError = (errorMessage, result) => {

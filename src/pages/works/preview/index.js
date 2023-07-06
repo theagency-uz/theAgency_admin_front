@@ -4,21 +4,21 @@ import { DashboardLayout } from "src/layout";
 
 import WithAuth from "src/HOC/withAuth";
 import { useEffect, useState } from "react";
-import { getArticleBySlugAsAdmin } from "src/services/article";
 import { useRouter } from "next/router";
 import EditorContent from "src/Components/common/editorContent";
+import { getWorkBySlugAsAdmin } from "src/services/work";
 
 
 const Article = () => {
     const router = useRouter();
     const slug = router.query.slug;
-    const [article, setArticle] = useState();
+    const [work, setWork] = useState();
 
     useEffect(() => {
         async function fetchAll() {
             if (slug) {
-                const tempArticle = await getArticleBySlugAsAdmin(slug);
-                setArticle(tempArticle);
+                const tempWork = await getWorkBySlugAsAdmin(slug);
+                setWork(tempWork);
             }
         }
 
@@ -29,7 +29,7 @@ const Article = () => {
     return (
         <>
             <Head>
-                <title>Статья | Parfum Gallery</title>
+                <title>Работа | Parfum Gallery</title>
             </Head>
             <Box
                 component="main"
@@ -39,7 +39,7 @@ const Article = () => {
                     backgroundColor: "#0F0F0F"
                 }}
             >
-                <EditorContent content={article?.fullDescription?.ru} />
+                <EditorContent content={work?.description?.ru} type={work?.type} />
             </Box>
         </>
     );

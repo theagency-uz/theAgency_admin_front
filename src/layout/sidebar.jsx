@@ -22,6 +22,7 @@ import QuizIcon from "@mui/icons-material/Quiz";
 import LogoutIcon from "@mui/icons-material/Logout";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
+import WorkIcon from '@mui/icons-material/Work';
 
 import { ChartBar as ChartBarIcon } from "src/assets/icons/chart-bar";
 import { Cog as CogIcon } from "src/assets/icons/cog";
@@ -72,6 +73,24 @@ const items = [
       },
       {
         href: "/blogs/category",
+        icon: <CategoryIcon fontSize="small" />,
+        title: "Категории",
+      },
+    ],
+  },
+  {
+    href: "/works",
+    icon: <WorkIcon fontSize="small" />,
+    title: "Работы",
+    type: "dropdown",
+    submenu: [
+      {
+        href: "/works",
+        icon: <WorkIcon fontSize="small" />,
+        title: "Работы",
+      },
+      {
+        href: "/works/category",
         icon: <CategoryIcon fontSize="small" />,
         title: "Категории",
       },
