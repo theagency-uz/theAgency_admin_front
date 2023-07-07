@@ -62,7 +62,14 @@
   border-radius: 0px;
   padding: 30px;
 }
-
+.editor :global(.__se__float-left) {
+  float: left;
+  margin: 0;
+}
+.editor :global(.__se__float-right) {
+  float: right;
+  margin: 0;
+}
 @media (max-width: 768px) {
   .editor h2,
   .editor h2 span {

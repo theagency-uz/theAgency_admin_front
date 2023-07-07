@@ -9,6 +9,14 @@ async function getWorks() {
         return err.response;
     }
 }
+async function getWorksAsAdmin() {
+    try {
+        const result = await http.get(baseUrl + "/work/admin");
+        return result.data;
+    } catch (err) {
+        return err.response;
+    }
+}
 async function getWorkCategories() {
     try {
         const result = await http.get(baseUrl + "/work/category");
@@ -182,6 +190,7 @@ async function deleteBulkWorkCategory(ids) {
 
 export {
     getWorks,
+    getWorksAsAdmin,
     getWorkById,
     getWorkBySlug,
     getWorkBySlugAsAdmin,

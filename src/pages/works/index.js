@@ -16,7 +16,7 @@ import WithAuth from "src/HOC/withAuth";
 import { imageBaseUrl } from "src/utils/endpoint";
 
 import { getArticles, deleteArticle, deleteBulkArticle, getArticlesAsAdmin } from "src/services/article";
-import { deleteBulkWork, deleteWork, getWorks } from "src/services/work";
+import { deleteBulkWork, deleteWork, getWorks, getWorksAsAdmin } from "src/services/work";
 
 const Works = () => {
   const columns = useMemo(
@@ -75,6 +75,19 @@ const Works = () => {
         grow: 1,
         name: "Категории",
         selector: (row) => row.spheres.map(s => s.name.ru).join(", "),
+        cell: (row) => <div title={row.spheres.map(s => s.name.ru).join(", ")}>{row.spheres.map(s => s.name.ru).join(", ")}</div>,
+        sortable: true,
+      },
+      {
+        grow: 0,
+        name: "Тип",
+        selector: (row) => row.type === "modal" ? "модалка" : row.type === "article" ? "статья" : "ссылка",
+        sortable: true,
+      },
+      {
+        grow: 0,
+        name: "Активный",
+        selector: (row) => row.isActive ? "Да" : "Нет",
         sortable: true,
       },
       {
@@ -100,7 +113,7 @@ const Works = () => {
             const check = confirm("Удалить работу?");
             if (check) {
               await deleteWork(row.id);
-              const updatedWorks = await getWorks();
+              const updatedWorks = await getWorksAsAdmin();
               setWorks([...updatedWorks]);
             }
           };
@@ -129,7 +142,7 @@ const Works = () => {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     async function fetchBlogs() {
-      const allWorks = await getWorks();
+      const allWorks = await getWorksAsAdmin();
       setWorks(allWorks);
       setLoading(false);
     }
@@ -137,7 +150,7 @@ const Works = () => {
   }, []);
   async function handleSearch(e) {
     const value = e.target.value;
-    const allWorks = await getWorks();
+    const allWorks = await getWorksAsAdmin();
     const searchedWorks = [];
     allWorks.forEach((work) => {
       if (work.id.toString().toLowerCase().includes(value.toLowerCase())) {
@@ -157,7 +170,7 @@ const Works = () => {
   }
   async function handleDelete(selectedRows) {
     const result = await deleteBulkWork([...selectedRows.map((r) => r.id)]);
-    const allWorks = await getWorks();
+    const allWorks = await getWorksAsAdmin();
     setWorks(allWorks);
   }
   if (loading) {
