@@ -34,7 +34,9 @@
   max-width: 100%;
   display: flex;
 }
-
+.content figure > * {
+  width: 100%;
+}
 .content :global(.ql-video) {
   width: 100%;
   min-height: 440px;
@@ -204,6 +206,14 @@
 }
 
 @media (max-width: 768px) {
+  .content img {
+    max-height: 90vh;
+    margin: auto;
+  }
+  .modal img {
+    max-height: 70vh;
+    margin: auto;
+  }
   .content h2,
   .content h2 span {
     font-size: 25px;
