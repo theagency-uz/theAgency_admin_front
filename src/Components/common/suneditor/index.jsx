@@ -363,7 +363,7 @@ export default function SunEditor({ value = "", type = "", onChange }) {
             this.util.addClass(table, "__se__tag__table__invert");
           }
           // console.log("content: ", this.getContents());
-          // this.setContents(this.getContents());
+          this.setContents(this.getContents());
         },
       };
 
