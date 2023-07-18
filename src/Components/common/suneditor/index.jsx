@@ -27,6 +27,7 @@ export default function SunEditor({ value = "", type = "", onChange }) {
 
       let bgColor;
       let tableAlign;
+      let tableInvert;
 
       bgColor = {
         name: "bgColor",
@@ -308,7 +309,65 @@ export default function SunEditor({ value = "", type = "", onChange }) {
         },
       };
 
-      setPlugins([...Object.values(tempPlugins), bgColor, tableAlign]);
+      tableInvert = {
+        // @Required @Unique
+        // plugin name
+        name: "tableInvert",
+        // @Required
+        // data display
+        display: "command",
+
+        // @Options
+        title: "Инвертация таблицы",
+        buttonClass: "",
+        innerHTML: "invert",
+
+        // @Required
+        // add function - It is called only once when the plugin is first run.
+        // This function generates HTML to append and register the event.
+        // arguments - (core : core object, targetElement : clicked button element)
+        add: function (core, targetElement) {
+          const context = core.context;
+
+          // @Required
+          // Registering a namespace for caching as a plugin name in the context object
+          context.tableInvert = {
+            targetButton: targetElement,
+          };
+        },
+
+        // @Override core
+        // Plugins with active methods load immediately when the editor loads.
+        // Called each time the selection is moved.
+        active: function (element) {
+          if (!element) {
+            this.util.removeClass(this.context.tableInvert.targetButton, "active");
+          } else if (this.util.hasClass(element, "__se__tag__table__invert")) {
+            this.util.addClass(this.context.tableInvert.targetButton, "active");
+            return true;
+          }
+
+          return false;
+        },
+
+        // @Required, @Override core
+        // The behavior of the "command plugin" must be defined in the "action" method.
+        action: function () {
+          const table = this.util.getParentElement(this.getSelectionNode(), "table");
+
+          // const rangeTag = this.util.getParentElement(this.getSelectionNode(), "div");
+
+          if (this.util.hasClass(table, "__se__tag__table__invert")) {
+            this.util.removeClass(table, "__se__tag__table__invert");
+          } else {
+            this.util.addClass(table, "__se__tag__table__invert");
+          }
+          // console.log("content: ", this.getContents());
+          // this.setContents(this.getContents());
+        },
+      };
+
+      setPlugins([...Object.values(tempPlugins), bgColor, tableAlign, tableInvert]);
     }
     importFunc();
   }, []);
@@ -326,7 +385,7 @@ export default function SunEditor({ value = "", type = "", onChange }) {
       ["fontColor", "hiliteColor", "textStyle"],
       ["removeFormat"],
       ["align", "horizontalRule", "list"],
-      ["table", "tableAlign", "link", "image", "video"],
+      ["table", "tableAlign", "tableInvert", "link", "image", "video"],
       ["imageGallery", "fullScreen"],
       [("showBlocks", "codeView")],
       ["bgColor"],
@@ -1357,8 +1416,10 @@ export default function SunEditor({ value = "", type = "", onChange }) {
     ],
     defaultStyle: "font-size:14px;",
     attributesWhitelist: {
+      all: "class", // Apply to all tags
       div: "style|class|data-.+", // Apply to all tags
       td: "style|class|data-.+", // Apply to all tags
+      table: "style|class|data-.+", // Apply to all tags
       span: "style|class|data-.+", // Apply to all tags
     },
     imageUploadUrl: apiBaseUrl + "/editor",

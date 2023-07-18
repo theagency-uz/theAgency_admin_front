@@ -189,21 +189,6 @@
   justify-content: center;
 }
 
-@media (min-width: 992px) {
-  .content table:global(.catalog) tr {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-  }
-
-  .content table:global(.catalog) a {
-    width: 200px;
-    height: 50px;
-  }
-  .content table:global(.catalog) td {
-    height: auto;
-  }
-}
 
 @media (max-width: 768px) {
   .content img {
@@ -235,6 +220,11 @@
   .content table tr {
     display: flex;
     flex-wrap: wrap;
+  }
+  .content table:global(.__se__tag__table__invert tr) {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column-reverse;
   }
 
   .content table tr td {
