@@ -53,7 +53,8 @@ const AddBlog = (props) => {
     category,
     isActive,
     isTg,
-    isNewPage
+    isNewPage,
+    blocks
   }) {
     const user = getUser();
     if (blog) {
@@ -69,7 +70,8 @@ const AddBlog = (props) => {
         isActive,
         isTg,
         tgDescription,
-        isNewPage
+        isNewPage,
+        blocks
       });
       return result;
     }
@@ -84,7 +86,8 @@ const AddBlog = (props) => {
       isActive,
       isTg,
       tgDescription,
-      isNewPage
+      isNewPage,
+      blocks
     });
 
     return result;

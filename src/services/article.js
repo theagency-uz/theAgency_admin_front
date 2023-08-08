@@ -106,7 +106,8 @@ async function addArticle({
   isActive,
   isTg,
   tgDescription,
-  isNewPage
+  isNewPage,
+  blocks
 }) {
   try {
     const formData = new FormData();
@@ -120,6 +121,10 @@ async function addArticle({
     formData.append("fullDescription", JSON.stringify(fullDescription));
     formData.append("tgDescription", JSON.stringify(tgDescription));
     formData.append("isNewPage", isNewPage);
+
+    for (let i = 0; i < blocks.length; i++) {
+      formData.append("blocks", JSON.stringify(blocks[i]));
+    }
 
     if (previewImage.file) {
       formData.append("previewImage", previewImage.file);
@@ -158,7 +163,8 @@ async function updateArticle({
   isActive,
   isTg,
   tgDescription,
-  isNewPage
+  isNewPage,
+  blocks
 }) {
   try {
     const formData = new FormData();
@@ -172,6 +178,10 @@ async function updateArticle({
     formData.append("shortDescription", JSON.stringify(shortDescription));
     formData.append("fullDescription", JSON.stringify(fullDescription));
     formData.append("tgDescription", JSON.stringify(tgDescription));
+
+    for (let i = 0; i < blocks.length; i++) {
+      formData.append("blocks", JSON.stringify(blocks[i]));
+    }
 
     if (previewImage.file) {
       formData.append("previewImage", previewImage.file);

@@ -36,10 +36,14 @@ const Article = () => {
                 sx={{
                     flexGrow: 1,
                     py: 8,
-                    backgroundColor: "#0F0F0F"
+                    backgroundColor: "#0F0F0F",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "50px"
                 }}
             >
-                <EditorContent content={article?.fullDescription?.ru} />
+                {article?.article_blocks?.map(block => <EditorContent key={block.id} content={block?.description?.ru} />)}
+
             </Box>
         </>
     );

@@ -377,6 +377,7 @@ export default function SunEditor({ value = "", type = "", onChange }) {
     className: type === "modal" ? `${classes.editor} ${classes.modal}` : classes.editor,
     height: 400,
     plugins: plugins ? plugins : [],
+
     buttonList: [
       ["undo", "redo"],
       ["fontSize", "font", "formatBlock"],
