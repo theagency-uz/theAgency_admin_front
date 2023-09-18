@@ -29,7 +29,7 @@ const Article = () => {
     return (
         <>
             <Head>
-                <title>Статья | Parfum Gallery</title>
+                <title>Статья | The Agency</title>
             </Head>
             <Box
                 component="main"

@@ -9,7 +9,7 @@ const Dashboard = ({ ...props }) => {
   return (
     <>
       <Head>
-        <title>Дашборд | Parfum Galleryt</title>
+        <title>Дашборд | The Agency</title>
       </Head>
       <Box
         component="main"

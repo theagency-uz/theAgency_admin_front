@@ -66,7 +66,7 @@ const Login = () => {
   return (
     <>
       <Head>
-        <title>Логин | Parfum gallery</title>
+        <title>Логин | The Agency</title>
       </Head>
       <Box
         component="main"

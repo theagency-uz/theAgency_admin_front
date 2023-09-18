@@ -4,9 +4,9 @@ const DOMAIN = "https://parfumgallery.uz";
 const DEFAULT_OG_IMAGE = "/favicon.ico";
 
 export default function Seo({
-  title = "Parfum gallery — оригинал парфюм и косметика от официального дистрибьютора.",
-  description = "Parfum gallery — эксклюзивная сеть официальных магазинов парфюмерии и косметики от мировых брендов в Узбекистане. 100% гарантия оригинала. Широкий ассортимент. 8 магазинов в Ташкенте.",
-  siteName = "Parfum gallery",
+  title = "The Agency — маркетинговое агентство",
+  description = "The Agency — маркетинговое агентство",
+  siteName = "The Agency",
   ogImage = DEFAULT_OG_IMAGE,
   ogType = "website",
   thumbnailUrl = DEFAULT_OG_IMAGE,
@@ -20,10 +20,7 @@ export default function Seo({
       <title key="title">{titleFinal}</title>
       <meta name="ROBOTS" content="INDEX, FOLLOW" />
       <meta name="description" content={description} />
-      <meta
-        name="keywords"
-        content="Parfum gallery, парфюм в Ташкенте, парфюм галлери, парфюм в ташкенте цены, оригинальные духи в ташкенте, парфюмерия ташкент, купить духи в ташкенте"
-      />
+      <meta name="keywords" content="The Agency" />
       <meta key="og_type" property="og:type" content={ogType} />
       <meta key="og_title" property="og:title" content={titleFinal} />
       <meta key="og_description" property="og:description" content={description} />
