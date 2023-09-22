@@ -1435,6 +1435,7 @@ export default function SunEditor({ value = "", type = "", onChange }) {
     },
     videoUploadUrl: apiBaseUrl + "/editor/video",
     videoUploadSizeLimit: 50 * 1024 * 1024, //MB
+    videoTagAttrs: { autoplay: true, muted: true, loop: true, playsinline: true },
   };
 
   // const onImageUploadError = (errorMessage, result, core) => {
