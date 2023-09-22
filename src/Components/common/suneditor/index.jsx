@@ -1428,6 +1428,13 @@ export default function SunEditor({ value = "", type = "", onChange }) {
     imageUploadHeader: {
       "x-auth-token": getJwt(),
     },
+
+    videoFileInput: true,
+    videoUploadHeader: {
+      "x-auth-token": getJwt(),
+    },
+    videoUploadUrl: apiBaseUrl + "/editor/video",
+    videoUploadSizeLimit: 50 * 1024 * 1024, //MB
   };
 
   // const onImageUploadError = (errorMessage, result, core) => {
