@@ -1423,6 +1423,7 @@ export default function SunEditor({ value = "", type = "", onChange }) {
       table: "style|class|data-.+", // Apply to all tags
       span: "style|class|data-.+", // Apply to all tags
     },
+    iframeAttributes: {},
     imageUploadUrl: apiBaseUrl + "/editor",
     imageGalleryUrl: apiBaseUrl + "/gallery",
     imageUploadHeader: {
