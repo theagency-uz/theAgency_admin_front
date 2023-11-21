@@ -27,8 +27,8 @@ import ImageUpload from "src/Components/admin/common/imageUpload";
 import { TabContext, TabList } from "@mui/lab";
 import AddIcon from "@mui/icons-material/Add";
 import Loading from "src/Components/common/Loading";
-import SunEditor from "src/Components/common/suneditor";
 import ArticleBlock from "./articleBlock";
+import Sortable from "../common/sortable";
 
 const AddBlog = ({ handleSubmit, blog, categories }) => {
   const router = useRouter();
@@ -106,6 +106,7 @@ const AddBlog = ({ handleSubmit, blog, categories }) => {
         name: { ru: "", uz: "" },
         slug: "",
         description: { ru: "", uz: "" },
+        order: Math.max(...blocks.map((b) => b.order)) + 1,
       },
     ]);
   }
@@ -118,6 +119,13 @@ const AddBlog = ({ handleSubmit, blog, categories }) => {
       tempBlocks[index][name] = value;
     }
     setBlocks(tempBlocks);
+  }
+  function handleSortBlock(tempBlocks) {
+    setBlocks(
+      tempBlocks.map((b, index) => {
+        return { ...b, order: index };
+      })
+    );
   }
 
   function handleDeleteBlock(index) {
@@ -259,7 +267,17 @@ const AddBlog = ({ handleSubmit, blog, categories }) => {
               <AddIcon />
             </Button>
 
-            <Box sx={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+            <Sortable
+              items={blocks}
+              setItems={setBlocks}
+              handleAdd={handleAddBlock}
+              Component={ArticleBlock}
+              handleChange={handleEditBlock}
+              handleDelete={handleDeleteBlock}
+              handleSort={handleSortBlock}
+            />
+
+            {/* <Box sx={{ display: "flex", flexDirection: "column", gap: "15px" }}>
               {blocks.map((block, index) => (
                 <ArticleBlock
                   key={block.id}
@@ -274,7 +292,7 @@ const AddBlog = ({ handleSubmit, blog, categories }) => {
                   <AddIcon />
                 </Button>
               )}
-            </Box>
+            </Box> */}
           </CardContent>
 
           <Divider />

@@ -1,19 +1,23 @@
 import { TabContext, TabList } from "@mui/lab";
 import { Box, Button, Tab, TextField, Zoom } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useEffect, useState } from "react";
 
 import SunEditor from "src/Components/common/suneditor";
 import Flag from "../../common/flag";
-import { useEffect, useState } from "react";
 
-export default function ArticleBlock({ block, index, handleEditBlock, handleDeleteBlock }) {
-  const [value, setValue] = useState("1");
-  const [description, setDescription] = useState({
-    ru: block.description.ru,
-    uz: block.description.uz,
-  });
+export default function ArticleBlock({
+  value: block,
+  index,
+  onChange: handleEditBlock,
+  handleDelete: handleDeleteBlock,
+  DragHandle,
+  ArrowsHandle,
+}) {
+  const [tabValue, setTabValue] = useState("1");
+
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    setTabValue(newValue);
   };
 
   const [fullTab, setfullTab] = useState("1");
@@ -21,23 +25,17 @@ export default function ArticleBlock({ block, index, handleEditBlock, handleDele
     setfullTab(newValue);
   };
 
-  useEffect(() => {
-    setDescription({ ru: block.description.ru, uz: block.description.uz });
-  }, [block]);
-
-  useEffect(() => {
-    handleEditBlock({ index, name: "description", value: description });
-  }, [description, index]);
-
   return (
-    <Box sx={{ border: "1px solid #181818", padding: "10px" }}>
-      <h2># {index + 1}</h2>
+    <Box sx={{ border: "1px solid #181818", padding: "10px", width: "100%" }}>
+      <DragHandle />
+      <ArrowsHandle />
+      <h2># {index || index === 0 ? index + 1 : ""}</h2>
       <Button onClick={(e) => handleDeleteBlock(index)}>
         <DeleteIcon />
       </Button>
 
       <Box sx={{ width: "100%", typography: "body1" }}>
-        <TabContext value={value}>
+        <TabContext value={tabValue}>
           <Box sx={{}}>
             <TabList
               onChange={handleChange}
@@ -53,7 +51,7 @@ export default function ArticleBlock({ block, index, handleEditBlock, handleDele
             </TabList>
           </Box>
 
-          <Zoom in={value == 1} value="1" hidden={value != "1"}>
+          <Zoom in={tabValue == 1} value="1" hidden={tabValue != "1"}>
             <Box>
               <TextField
                 label="Название ru"
@@ -62,13 +60,13 @@ export default function ArticleBlock({ block, index, handleEditBlock, handleDele
                 onChange={(e) =>
                   handleEditBlock({ index, name: "name", lang: "ru", value: e.target.value })
                 }
-                value={block.name.ru}
+                value={block?.name.ru}
                 variant="outlined"
                 inputProps={{}}
               />
             </Box>
           </Zoom>
-          <Zoom in={value == 2} value="2" hidden={value != "2"}>
+          <Zoom in={tabValue == 2} value="2" hidden={tabValue != "2"}>
             <Box>
               <TextField
                 label="Название uz"
@@ -77,7 +75,7 @@ export default function ArticleBlock({ block, index, handleEditBlock, handleDele
                 onChange={(e) =>
                   handleEditBlock({ index, name: "name", lang: "uz", value: e.target.value })
                 }
-                value={block.name.uz}
+                value={block?.name.uz}
                 variant="outlined"
                 inputProps={{}}
               />
@@ -92,7 +90,7 @@ export default function ArticleBlock({ block, index, handleEditBlock, handleDele
         name="slug"
         onChange={(e) => handleEditBlock({ index, name: "slug", value: e.target.value })}
         type="text"
-        value={block.slug}
+        value={block?.slug}
         variant="outlined"
         sx={{ resize: "vertical" }}
       />
@@ -117,11 +115,9 @@ export default function ArticleBlock({ block, index, handleEditBlock, handleDele
             <Box sx={{ overflow: "visible" }}>
               <SunEditor
                 onChange={(v) => {
-                  setDescription((d) => {
-                    return { ...d, ru: v };
-                  });
+                  handleEditBlock({ index, name: "description", lang: "ru", value: v });
                 }}
-                value={description.ru}
+                value={block.description.ru}
               />
             </Box>
           </Zoom>
@@ -129,11 +125,9 @@ export default function ArticleBlock({ block, index, handleEditBlock, handleDele
             <Box sx={{ overflow: "visible" }}>
               <SunEditor
                 onChange={(v) => {
-                  setDescription((d) => {
-                    return { ...d, uz: v };
-                  });
+                  handleEditBlock({ index, name: "description", lang: "uz", value: v });
                 }}
-                value={description.uz}
+                value={block.description.uz}
               />
             </Box>
           </Zoom>

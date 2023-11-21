@@ -72,12 +72,9 @@ const AddWorkForm = ({ handleSubmit, work, categories }) => {
       isActive: Yup.boolean(),
       isNewPage: Yup.boolean(),
     }),
-    validate: async ({ type }) => {
-      console.log(formik.errors);
-    },
+    validate: async ({ type }) => {},
 
     onSubmit: async ({ nameRu, nameUz, slug, type, order, category, isActive, isNewPage }) => {
-      console.log(1);
       setFormLoading(true);
       const result = await handleSubmit({
         isNewPage,
