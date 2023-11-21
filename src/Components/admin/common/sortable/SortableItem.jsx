@@ -65,7 +65,7 @@ export function ArrowsHandle({ handleSort, onChange, items, id, index }) {
         onClick={(e) => {
           if (index !== 0) {
             const activeIndex = index;
-            const overIndex = index + 1;
+            const overIndex = index - 1;
 
             onChange(arrayMove(items, activeIndex, overIndex));
             if (handleSort) {
@@ -80,7 +80,7 @@ export function ArrowsHandle({ handleSort, onChange, items, id, index }) {
         onClick={(e) => {
           if (index < items.length - 1) {
             const activeIndex = index;
-            const overIndex = index - 1;
+            const overIndex = index + 1;
 
             onChange(arrayMove(items, activeIndex, overIndex));
             if (handleSort) {
