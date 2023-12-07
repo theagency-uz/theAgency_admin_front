@@ -47,6 +47,12 @@
   width: 100%;
 }
 
+.content h1,
+.content h1 span {
+  font-size: 60px;
+  line-height: 130%;
+  font-weight: 300;
+}
 .content h2,
 .content h2 span {
   font-size: 50px;
@@ -189,7 +195,6 @@
   justify-content: center;
 }
 
-
 @media (max-width: 768px) {
   .content img {
     max-height: 90vh;
@@ -198,6 +203,11 @@
   .modal img {
     max-height: 70vh;
     margin: auto;
+  }
+  .content h1,
+  .content h1 span {
+    font-size: 30px;
+    line-height: 130%;
   }
   .content h2,
   .content h2 span {

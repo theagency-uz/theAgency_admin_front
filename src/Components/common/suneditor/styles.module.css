@@ -29,6 +29,12 @@
   max-width: 100%;
 }
 
+.editor h1,
+.editor h1 span {
+  font-size: 60px;
+  line-height: 130%;
+  font-weight: 300;
+}
 .editor h2,
 .editor h2 span {
   font-size: 50px;
@@ -71,6 +77,12 @@
   margin: 0;
 }
 @media (max-width: 768px) {
+  .editor h1,
+  .editor h1 span {
+    font-size: 30px;
+    line-height: 130%;
+    font-weight: 300;
+  }
   .editor h2,
   .editor h2 span {
     font-size: 25px;
