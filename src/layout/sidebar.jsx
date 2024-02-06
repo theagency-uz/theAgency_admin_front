@@ -5,33 +5,15 @@ import PropTypes from "prop-types";
 import { Box, Divider, Drawer, useMediaQuery } from "@mui/material";
 import CategoryIcon from "@mui/icons-material/Category";
 import ArticleIcon from "@mui/icons-material/Article";
-import BrandingWatermarkIcon from "@mui/icons-material/BrandingWatermark";
-import VariationIcon from "@mui/icons-material/ChangeHistory";
-import WebIcon from "@mui/icons-material/Web";
-import HomeIcon from "@mui/icons-material/Home";
-import InfoIcon from "@mui/icons-material/Info";
-import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
-import ClassIcon from "@mui/icons-material/Class";
-import FeaturedPlayListIcon from "@mui/icons-material/FeaturedPlayList";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import SignalWifiStatusbar4BarIcon from "@mui/icons-material/SignalWifiStatusbar4Bar";
-import PrivacyTipRoundedIcon from "@mui/icons-material/PrivacyTipRounded";
 import RecentActorsIcon from "@mui/icons-material/RecentActors";
-import PaidIcon from "@mui/icons-material/Paid";
-import QuizIcon from "@mui/icons-material/Quiz";
 import LogoutIcon from "@mui/icons-material/Logout";
-import RateReviewIcon from "@mui/icons-material/RateReview";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
-import WorkIcon from '@mui/icons-material/Work';
+import WorkIcon from "@mui/icons-material/Work";
+import ContactMailIcon from "@mui/icons-material/ContactMail";
 
 import { ChartBar as ChartBarIcon } from "src/assets/icons/chart-bar";
-import { Cog as CogIcon } from "src/assets/icons/cog";
 import { Lock as LockIcon } from "src/assets/icons/lock";
-import { ShoppingBag as ShoppingBagIcon } from "src/assets/icons/shopping-bag";
-import { User as UserIcon } from "src/assets/icons/user";
-import { UserAdd as UserAddIcon } from "src/assets/icons/user-add";
 import { Users as UsersIcon } from "src/assets/icons/users";
-import { XCircle as XCircleIcon } from "src/assets/icons/x-circle";
 import { Logo } from "src/assets/icons/adminLogo";
 import { NavItem } from "./nav-item";
 import Accordion from "src/Components/admin/common/accordion";
@@ -93,6 +75,24 @@ const items = [
         href: "/works/category",
         icon: <CategoryIcon fontSize="small" />,
         title: "Категории",
+      },
+    ],
+  },
+  {
+    href: "/mailings",
+    icon: <SmartToyIcon fontSize="small" />,
+    title: "Телеграм Бот",
+    type: "dropdown",
+    submenu: [
+      {
+        href: "/mailings",
+        icon: <ContactMailIcon fontSize="small" />,
+        title: "Рассылки",
+      },
+      {
+        href: "/mailings/users",
+        icon: <UsersIcon fontSize="small" />,
+        title: "Бот усеры",
       },
     ],
   },

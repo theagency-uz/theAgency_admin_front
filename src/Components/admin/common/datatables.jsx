@@ -78,11 +78,8 @@ const Table = ({ columns, data, handleDelete }) => {
           setPerPage(e);
         }}
       />
-
     </div>
   );
 };
 
 export default Table;
-
-

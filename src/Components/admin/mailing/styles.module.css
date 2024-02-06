@@ -1,0 +1,12 @@
+.mailing_file_upload_wrapper {
+  display: flex;
+  gap: 10px;
+}
+
+.mailing_file_upload {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
