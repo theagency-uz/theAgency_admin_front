@@ -2,24 +2,23 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 
 import { TabContext, TabList } from "@mui/lab";
-import { Box, Tab, TextareaAutosize, Zoom } from "@mui/material";
+import { Box, Tab, TextField, TextareaAutosize, Zoom } from "@mui/material";
 import Flag from "src/Components/admin/common/flag";
 
-export default function MailingText() {
+export default function MailingText({ ...props }) {
+  const { textRu, textUz, handleChange, formikErrors } = props;
   const [value, setValue] = useState("1");
-  const [textRu, setTextRu] = useState("");
-  const [textUz, setTextUz] = useState("");
 
-  const handleChange = (event, newValue) => {
+  const handleChangeTab = (event, newValue) => {
     setValue(newValue);
   };
 
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>
       <TabContext value={value}>
-        <Box sx={{}}>
+        <Box>
           <TabList
-            onChange={handleChange}
+            onChange={handleChangeTab}
             sx={{
               backgroundColor: "rgba(0,0,0,0.1)",
               width: "fit-content",
@@ -33,36 +32,47 @@ export default function MailingText() {
 
         <Zoom in={value == 1} value="1" hidden={value != "1"}>
           <Box>
-            <TextareaAutosize
+            <TextField
+              id="outlined-multiline-static"
+              label="Описание RU"
+              multiline
               minRows={5}
+              maxRows={10}
+              // defaultValue="Default Value"
               value={textRu}
+              error={formikErrors.textRu}
+              name="textRu"
               style={{
                 width: "100%",
                 height: "100%",
                 marginBlock: "20px",
-                padding: "10px",
                 boxSizing: "border-box",
               }}
               placeholder="Описание RU"
-              onChange={(e) => setTextRu(e.target.value)}
+              onChange={handleChange}
             />
           </Box>
         </Zoom>
         <Zoom in={value == 2} value="2" hidden={value != "2"}>
           <Box>
-            <TextareaAutosize
-              aria-label="empty textarea"
+            <TextField
+              id="outlined-multiline-static"
+              label="Описание UZ"
+              multiline
               minRows={5}
+              maxRows={10}
+              error={formikErrors.textUz}
+              // defaultValue="Default Value"
+              name="textUz"
               value={textUz}
               style={{
                 width: "100%",
                 height: "100%",
                 marginBlock: "20px",
-                padding: "10px",
                 boxSizing: "border-box",
               }}
               placeholder="Описание UZ"
-              onChange={(e) => setTextUz(e.target.value)}
+              onChange={handleChange}
             />
           </Box>
         </Zoom>

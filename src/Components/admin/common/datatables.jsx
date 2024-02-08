@@ -9,7 +9,16 @@ import { useRouter } from "next/router";
 // import "ag-grid-community/styles/ag-grid.css";
 // import "ag-grid-community/styles/ag-theme-alpine.css";
 
-const Table = ({ columns, data, handleDelete }) => {
+const Table = ({
+  columns,
+  data,
+  handleDelete,
+  isServer,
+  totalRows,
+  handlePerRowsChange,
+  handlePageChange,
+  loading,
+}) => {
   const router = useRouter();
   const [selectedRows, setSelectedRows] = useState([]);
   const [perPage, setPerPage] = useState(10);
@@ -34,6 +43,23 @@ const Table = ({ columns, data, handleDelete }) => {
     setSelectedRows(state.selectedRows);
   }, []);
 
+  if (isServer) {
+    return (
+      <DataTable
+        title="Users"
+        columns={columns}
+        data={data}
+        selectableRows
+        onSelectedRowsChange={handleRowSelected}
+        progressPending={loading}
+        pagination
+        paginationServer
+        paginationTotalRows={totalRows}
+        onChangeRowsPerPage={handlePerRowsChange}
+        onChangePage={handlePageChange}
+      />
+    );
+  }
   return (
     <div className={classes.table}>
       <Box
@@ -53,9 +79,7 @@ const Table = ({ columns, data, handleDelete }) => {
           Delete
         </Button>
       </Box>
-
       {/* <AgGridReact columnDefs={columns} rowData={data}></AgGridReact> */}
-
       <DataTable
         pagination={true}
         data={data}

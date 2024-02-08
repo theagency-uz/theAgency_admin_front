@@ -5,72 +5,44 @@ import { useRouter } from "next/router";
 
 import { DashboardLayout } from "src/layout";
 import Loading from "src/Components/admin/common/Loading";
-
 import WithAuth from "src/HOC/withAuth";
 import AddMailingForm from "src/Components/admin/mailing/add-mailing";
-import { addWork, getWorkById, getWorkCategories, updateWork } from "src/services/work";
+import { addMailing, getMailingById, updateMailing } from "src/services/mailing";
 
 const AddMailing = (props) => {
   const router = useRouter();
-  const [work, setWork] = useState();
+  const [mailing, setMailing] = useState();
   const [loading, setLoading] = useState(true);
-  const [categories, setCategories] = useState([]);
   const id = router.query.id;
+
   useEffect(() => {
     if (!router.isReady) {
       return;
     }
-    async function fetchWork() {
+    async function fetchMailing() {
       if (id) {
-        const data = await getWorkById(id);
+        const data = await getMailingById(id);
         if (!data) {
           router.back();
         }
-        setWork(data);
+        setMailing(data);
       }
-      const fetchedCategories = await getWorkCategories();
-      setCategories(fetchedCategories);
       setLoading(false);
     }
-    fetchWork();
+    fetchMailing();
   }, [router.query.id]);
 
   async function handleSubmit({
-    name,
-    slug,
-    description,
-    image,
-    type,
-    order,
-    category,
-    isActive,
-    isNewPage
+    textRu, textUz, image, video
   }) {
-    if (work) {
-      const result = await updateWork({
-        id,
-        name,
-        slug,
-        description,
-        image,
-        type,
-        order,
-        category,
-        isActive,
-        isNewPage
+    if (mailing) {
+      const result = await updateMailing({
+        id, textRu, textUz, image, video
       });
       return result;
     }
-    const result = await addWork({
-      name,
-      slug,
-      description,
-      image,
-      type,
-      order,
-      category,
-      isActive,
-      isNewPage
+    const result = await addMailing({
+      textRu, textUz, image, video
     });
 
     return result;
@@ -95,7 +67,10 @@ const AddMailing = (props) => {
             {id ? "Редактировать рассылку" : "Создать рассылку"}
           </Typography>
           <Box sx={{ pt: 3 }}>
-            <AddMailingForm handleSubmit={handleSubmit} work={work} categories={categories} />
+            <AddMailingForm
+              handleSubmit={handleSubmit}
+              mailing={mailing?.post}
+            />
           </Box>
         </Container>
       </Box>

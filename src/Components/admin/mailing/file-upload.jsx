@@ -1,14 +1,13 @@
 import React, { useState } from "react";
-
 import styled from "@emotion/styled";
 import { Box, Button } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DeleteIcon from "@mui/icons-material/Delete";
-
 import classes from "./styles.module.css";
+import mailings from "src/pages/mailings";
 
-export default function FileUpload() {
-  const [mediaFiles, setMediaFiles] = useState([]);
+export default function FileUpload({ setFile, file, mailings }) {
+  const [uploading, setUploading] = useState(false);
 
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -22,21 +21,22 @@ export default function FileUpload() {
     width: 1,
   });
 
-  const handleFileChange = (event) => {
-    const files = event.target.files;
-    if (files.length > 0) {
-      const newMediaFiles = Array.from(files).map((file) => ({ file }));
-      setMediaFiles((prevFiles) => [...prevFiles, ...newMediaFiles]);
+  const handleFileChange = async (event) => {
+    const newFile = event.target.files[0];
+    try {
+      setUploading(true);
+      newFile.type.startsWith("image/") ? setFile({ image: newFile }) : setFile({ video: newFile });
+    } catch (error) {
+      console.error("Error uploading media:", error);
+    } finally {
+      setUploading(false);
     }
   };
 
-  const handleDelete = (index) => {
-    setMediaFiles((prevFiles) => {
-      const updatedFiles = [...prevFiles];
-      updatedFiles.splice(index, 1);
-      return updatedFiles;
-    });
+  const handleDelete = () => {
+    setFile();
   };
+
   return (
     <>
       <Box
@@ -47,44 +47,55 @@ export default function FileUpload() {
           marginBottom: "20px",
         }}
       >
-        {mediaFiles.map((media, index) => (
-          <div key={index} className={classes.mailing_file_upload_wrapper}>
-            {media.file.type.startsWith("image/") ? (
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              >
-                <img
-                  className={classes.mailing_file_upload}
-                  src={URL.createObjectURL(media.file)}
-                  alt={`img-${index}`}
+        <div className={classes.mailing_file_upload_wrapper}>
+          {file?.image ? (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+              }}
+            >
+              <img
+                className={classes.mailing_file_upload}
+                src={
+                  typeof file?.image == "string"
+                    ? "http://192.168.0.132:5000/" + file?.image
+                    : URL.createObjectURL(file?.image)
+                }
+                alt={`img-1`}
+              />
+              <Button onClick={handleDelete} startIcon={<DeleteIcon />}>
+                Убрать
+              </Button>
+            </Box>
+          ) : file?.video ? (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+              }}
+            >
+              <video className={classes.mailing_file_upload} controls>
+                <source
+                  src={
+                    typeof file?.video == "string"
+                      ? "http://192.168.0.132:5000/" + file?.video
+                      : URL.createObjectURL(file?.video)
+                  }
+                  type={file?.video?.type}
                 />
-                <Button onClick={() => handleDelete(index)} startIcon={<DeleteIcon />}>
-                  Убрать
-                </Button>
-              </Box>
-            ) : media.file.type.startsWith("video/") ? (
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              >
-                <video className={classes.mailing_file_upload} controls>
-                  <source src={URL.createObjectURL(media.file)} type={media.file.type} />
-                  Your browser does not support the video tag.
-                </video>
-                <Button onClick={() => handleDelete(index)} startIcon={<DeleteIcon />}>
-                  Убрать
-                </Button>
-              </Box>
-            ) : null}
-          </div>
-        ))}
+                Your browser does not support the video tag.
+              </video>
+              <Button onClick={handleDelete} startIcon={<DeleteIcon />}>
+                Убрать
+              </Button>
+            </Box>
+          ) : (
+            "нет фото или видео "
+          )}
+        </div>
       </Box>
       <Box
         sx={{
@@ -92,9 +103,14 @@ export default function FileUpload() {
           marginBottom: "20px",
         }}
       >
-        <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-          Загрузить фото или видео
-          <VisuallyHiddenInput type="file" multiple onChange={handleFileChange} />
+        <Button
+          component="label"
+          variant="contained"
+          startIcon={<CloudUploadIcon />}
+          disabled={uploading}
+        >
+          {uploading ? "Загрузка..." : "Загрузить фото или видео"}
+          <VisuallyHiddenInput type="file" onChange={handleFileChange} />
         </Button>
       </Box>
     </>

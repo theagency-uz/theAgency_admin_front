@@ -9,31 +9,51 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { DashboardLayout } from "src/layout";
 import TableToolbar from "src/Components/admin/common/table-toolbar";
 import DataTable from "src/Components/admin/common/datatables";
-import Loading from "src/Components/admin/common/Loading";
 
 import WithAuth from "src/HOC/withAuth";
 
-import { imageBaseUrl } from "src/utils/endpoint";
-
-import { deleteBulkWork, getWorksAsAdmin } from "src/services/work";
+import { deleteMailing, getMailings } from "src/services/mailing";
 
 const Mailings = () => {
   const columns = useMemo(
     () => [
       {
-        name: "Картинка",
-        selector: (row) => row.image,
-        cell: (row) => (
-          <img
-            src={imageBaseUrl + row.image}
-            width="100"
-            height="50"
-            style={{ objectFit: "contain" }}
-          />
-        ),
+        name: "Картинка или Видео",
+        selector: (row) => {
+          return row.image && row.video == null
+            ? row.image
+            : row.image == null && row.video
+              ? row.video
+              : null;
+        },
+        cell: (row) => {
+          const mediaSource = row.image || row.video;
+
+          if (mediaSource) {
+            return row.image ? (
+              <img
+                src={"http://192.168.0.132:5000" + row.image}
+                width="100"
+                height="50"
+                style={{ objectFit: "contain" }}
+                alt="Image"
+              />
+            ) : (
+              <video
+                src={"http://192.168.0.132:5000" + row.video}
+                width="100"
+                height="50"
+                controls
+              />
+            );
+          }
+
+          return <div>Нет изображения или видео</div>; // or a default element if neither image nor video is available
+        },
         grow: 0,
         ignoreRowClick: false,
       },
+
       {
         name: "Id",
         selector: (row) => row.id,
@@ -42,8 +62,8 @@ const Mailings = () => {
       },
       {
         name: "Текст",
-        selector: (row) => row.name.ru,
-        cell: (row) => <div title={row.name.ru}>{row.name.ru}</div>,
+        selector: (row) => row.text.ru,
+        cell: (row) => <div title={row.text.ru}>{row.text.ru}</div>,
         grow: 1,
         sortable: true,
       },
@@ -67,6 +87,12 @@ const Mailings = () => {
         cell: (row) => {
           const handleDelete = async (e) => {
             e.stopPropagation(); // don't select this row after clicking
+            const check = confirm("Удалить рассылку?");
+            if (check) {
+              await deleteMailing(row.id);
+              const updatedMailings = await getMailings({ limit: perPage, page: 1 });
+              setMailings([...updatedMailings.posts]);
+            }
 
           };
           return (
@@ -90,34 +116,54 @@ const Mailings = () => {
     []
   );
 
-  const [works, setWorks] = useState([]);
+  const [mailings, setMailings] = useState([]);
+  const [totalRows, setTotalRows] = useState(0);
+  const [perPage, setPerPage] = useState(10);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     async function fetchBlogs() {
-      const allWorks = await getWorksAsAdmin();
-      setWorks(allWorks);
+      const allMailings = await getMailings({ limit: perPage, page: 1 });
+      setMailings(allMailings?.posts);
+      setTotalRows(allMailings?.count)
       setLoading(false);
     }
     fetchBlogs();
   }, []);
+
+
+  const handlePageChange = async (page) => {
+    const allMailings = await getMailings({ page: page, limit: perPage });
+
+    setMailings(allMailings.posts);
+    setTotalRows(allMailings.count)
+
+  };
+  const handlePerRowsChange = async (newPerPage, page) => {
+    setLoading(true);
+    const response = await getMailings({ page: page, limit: newPerPage });
+    setMailings(response.posts);
+    setPerPage(newPerPage);
+    setTotalRows(response.count)
+    setLoading(false);
+  };
+
   async function handleSearch(e) {
     const value = e.target.value;
-    const allWorks = await getWorksAsAdmin();
-    const searchedWorks = [];
-    allWorks.forEach((work) => {
-      if (work.id.toString().toLowerCase().includes(value.toLowerCase())) {
-        searchedWorks.push(work);
-      } else if (work.name.ru.toString().toLowerCase().includes(value.toLowerCase())) {
-        searchedWorks.push(work);
-      } else if (work.slug.toString().toLowerCase().includes(value.toLowerCase())) {
-        searchedWorks.push(work);
-      } else if (work.createdAt.toString().toLowerCase().includes(value.toLowerCase())) {
-        searchedWorks.push(work);
-      } else if (work.updatedAt.toString().toLowerCase().includes(value.toLowerCase())) {
-        searchedWorks.push(work);
+    const allMailings = await getMailings();
+    const searchedMailings = [];
+    allMailings.forEach((mailing) => {
+      if (mailing.id.toString().toLowerCase().includes(value.toLowerCase())) {
+        searchedMailings.push(mailing);
+      } else if (mailing.text.ru.toString().toLowerCase().includes(value.toLowerCase())) {
+        searchedMailings.push(mailing);
+      } else if (mailing.createdAt.toString().toLowerCase().includes(value.toLowerCase())) {
+        searchedMailings.push(mailing);
+      } else if (mailing.updatedAt.toString().toLowerCase().includes(value.toLowerCase())) {
+        searchedMailings.push(mailing);
       }
     });
-    setWorks(searchedWorks);
+    setMailings(searchedMailings);
     return "search";
   }
   async function handleDelete(selectedRows) {
@@ -125,9 +171,10 @@ const Mailings = () => {
     const allWorks = await getWorksAsAdmin();
     setWorks(allWorks);
   }
-  if (loading) {
-    return <Loading />;
-  }
+  // if (loading) {
+  //   return <Loading />;
+  // }
+
   return (
     <>
       <Head>
@@ -142,7 +189,16 @@ const Mailings = () => {
       >
         <Container maxWidth={false}>
           <TableToolbar handleSearch={handleSearch} title={"Рассылки"} link="mailings/add-mailing" />
-          <DataTable data={works} columns={columns} handleDelete={handleDelete} />
+          <DataTable
+            data={mailings}
+            columns={columns}
+            handleDelete={handleDelete}
+            isServer={true}
+            totalRows={totalRows}
+            handlePerRowsChange={handlePerRowsChange}
+            handlePageChange={handlePageChange}
+            loading={loading}
+          />
         </Container>
       </Box>
     </>
