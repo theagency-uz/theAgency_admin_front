@@ -135,7 +135,7 @@ const AddBlog = ({ handleSubmit, blog, categories }) => {
   return (
     <Suspense fallback={<Loading />}>
       <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
-        <Card sx={{ overflow: "visible" }}>
+        <Card sx={{ overflow: "visible", position: "relative" }}>
           <CardHeader subheader={blog ? "Редактировать статью" : "Создать статью"} title="Статья" />
           <Divider />
           <CardContent>
@@ -307,7 +307,15 @@ const AddBlog = ({ handleSubmit, blog, categories }) => {
               color="primary"
               variant="contained"
               type="submit"
-              sx={{ display: "flex", gap: "5px" }}
+              sx={{
+                display: "flex",
+                gap: "5px",
+
+                position: "fixed",
+                top: "10px",
+                right: "160px",
+                zIndex: 1101,
+              }}
             >
               {blog ? "Обновить" : "Создать"}
               {formLoading && <CircularProgress sx={{ color: "#fff" }} size={20} />}
