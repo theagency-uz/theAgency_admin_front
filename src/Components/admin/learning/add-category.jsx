@@ -48,7 +48,7 @@ const AddCategory = ({ handleSubmit, category, isLearning }) => {
         toast.success(category ? "Категория обновлена!" : "Категория добавлена!");
         if (result.id) {
           router.push(
-            `/${isLearning ? "learning" : "blogs"}/category/add-category?id=${result.id}`
+            `/learning/category/add-category?id=${result.id}`
           );
         }
       }

@@ -15,7 +15,7 @@ import WithAuth from "src/HOC/withAuth";
 
 import { imageBaseUrl } from "src/utils/endpoint";
 
-import { getArticles, deleteArticle, deleteBulkArticle, getArticlesAsAdmin } from "src/services/article";
+import { getLearnings, deleteLearning, deleteBulkLearning, getLearningsAsAdmin } from "src/services/learning";
 
 const Blogs = () => {
   const columns = useMemo(
@@ -52,8 +52,8 @@ const Blogs = () => {
         name: "Ссылка",
         selector: (row) => row.slug,
         cell: (row) => (
-          <a href={`https://theagency.uz/articles/${row.slug}`} target="_blank" style={{ textDecoration: 'underline' }}>
-            {`https://theagency.uz/articles/${row.slug}`}
+          <a href={`https://theagency.uz/learning/${row.slug}`} target="_blank" style={{ textDecoration: 'underline' }}>
+            {`https://theagency.uz/learning/${row.slug}`}
           </a>
         ),
         sortable: true,
@@ -67,7 +67,7 @@ const Blogs = () => {
       {
         grow: 1,
         name: "Категория",
-        selector: (row) => row.article_category.name.en,
+        selector: (row) => row.learning_category?.name?.ru || "",
         sortable: true,
       },
       {
@@ -92,15 +92,15 @@ const Blogs = () => {
             e.stopPropagation(); // don't select this row after clicking
             const check = confirm("Удалить статью?");
             if (check) {
-              await deleteArticle(row.id);
-              const updatedBlogs = await getArticles();
+              await deleteLearning(row.id);
+              const updatedBlogs = await getLearnings();
               setBlogs([...updatedBlogs]);
             }
           };
           return (
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
               <Button sx={{ padding: "5px" }}>
-                <Link href={`/blogs/add-blog?id=${row.id}`} passHref>
+                <Link href={`/learning/add-blog?id=${row.id}`} passHref>
                   <EditIcon />
                 </Link>
               </Button>
@@ -122,7 +122,7 @@ const Blogs = () => {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     async function fetchBlogs() {
-      const allBlogs = await getArticlesAsAdmin();
+      const allBlogs = await getLearningsAsAdmin();
       setBlogs(allBlogs);
       setLoading(false);
     }
@@ -130,7 +130,7 @@ const Blogs = () => {
   }, []);
   async function handleSearch(e) {
     const value = e.target.value;
-    const allBlogs = await getArticles();
+    const allBlogs = await getLearnings();
     const searchedBlogs = [];
     allBlogs.forEach((blog) => {
       if (blog.id.toString().toLowerCase().includes(value.toLowerCase())) {
@@ -151,8 +151,8 @@ const Blogs = () => {
     return "search";
   }
   async function handleDelete(selectedRows) {
-    const result = await deleteBulkArticle([...selectedRows.map((r) => r.id)]);
-    const allBlogs = await getArticles();
+    const result = await deleteBulkLearning([...selectedRows.map((r) => r.id)]);
+    const allBlogs = await getLearnings();
     setBlogs(allBlogs);
   }
   if (loading) {
@@ -161,7 +161,7 @@ const Blogs = () => {
   return (
     <>
       <Head>
-        <title>Статьи | Админ</title>
+        <title>Стажировка | Админ</title>
       </Head>
       <Box
         component="main"
@@ -171,7 +171,7 @@ const Blogs = () => {
         }}
       >
         <Container maxWidth={false}>
-          <TableToolbar handleSearch={handleSearch} title={"Статьи"} link="/blogs/add-blog" />
+          <TableToolbar handleSearch={handleSearch} title={"Стажировка"} link="/learning/add-blog" />
           <DataTable data={blogs} columns={columns} handleDelete={handleDelete} />
         </Container>
       </Box>

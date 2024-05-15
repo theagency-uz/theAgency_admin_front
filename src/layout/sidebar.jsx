@@ -23,6 +23,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
 import WorkIcon from '@mui/icons-material/Work';
+import SchoolIcon from '@mui/icons-material/School';
 
 import { ChartBar as ChartBarIcon } from "src/assets/icons/chart-bar";
 import { Cog as CogIcon } from "src/assets/icons/cog";
@@ -91,6 +92,24 @@ const items = [
       },
       {
         href: "/works/category",
+        icon: <CategoryIcon fontSize="small" />,
+        title: "Категории",
+      },
+    ],
+  },
+  {
+    href: "/learning",
+    icon: <SchoolIcon fontSize="small" />,
+    title: "Стажировка",
+    type: "dropdown",
+    submenu: [
+      {
+        href: "/learning",
+        icon: <SchoolIcon fontSize="small" />,
+        title: "Стажировка",
+      },
+      {
+        href: "/learning/category",
         icon: <CategoryIcon fontSize="small" />,
         title: "Категории",
       },

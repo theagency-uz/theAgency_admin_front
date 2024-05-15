@@ -30,7 +30,8 @@ import Loading from "src/Components/common/Loading";
 import ArticleBlock from "./articleBlock";
 import Sortable from "../common/sortable";
 
-const AddBlog = ({ handleSubmit, blog, categories, isLearning }) => {
+const AddBlog = ({ handleSubmit, blog, categories }) => {
+  console.log(blog);
   const router = useRouter();
   const [formLoading, setFormLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState(blog?.previewImage || "");
@@ -48,7 +49,7 @@ const AddBlog = ({ handleSubmit, blog, categories, isLearning }) => {
       nameUz: blog?.name?.uz || "",
 
       slug: blog?.slug || "",
-      category: categoryOptions.find((c) => c.id === blog?.articleCategoryId),
+      category: categoryOptions.find((c) => c.id === blog?.learningCategoryId),
       isActive: blog?.isActive || false,
       isNewPage: (blog?.isNewPage === false ? false : blog?.isNewPage) || false,
     },
@@ -84,7 +85,7 @@ const AddBlog = ({ handleSubmit, blog, categories, isLearning }) => {
       if (result.status === 200) {
         toast.success(blog ? "Статья обновлена!" : "Статья создана!");
         if (result.id) {
-          router.push(`/${isLearning ? "learning" : "blogs"}/add-blog?id=${result.id}`);
+          router.push(`/learning/add-blog?id=${result.id}`);
         }
       } else {
         console.log(result?.data || result);
@@ -123,7 +124,6 @@ const AddBlog = ({ handleSubmit, blog, categories, isLearning }) => {
       ];
     });
   }
-
   function handleSortBlock(tempBlocks) {
     setBlocks(
       tempBlocks.map((b, index) => {
@@ -145,7 +145,7 @@ const AddBlog = ({ handleSubmit, blog, categories, isLearning }) => {
           <CardContent>
             {blog ? (
               <Box>
-                <a href={"/blogs/preview?slug=" + blog?.slug} target="_blank" rel="noreferrer">
+                <a href={"/learning/preview?slug=" + blog?.slug} target="_blank" rel="noreferrer">
                   <Button sx={{ fontSize: "20px" }}>
                     <LinkIcon sx={{ marginRight: "10px" }} /> Превью статьи
                   </Button>
