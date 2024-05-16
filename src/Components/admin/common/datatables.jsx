@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 const Table = ({ columns, data, handleDelete }) => {
   const router = useRouter();
   const [selectedRows, setSelectedRows] = useState([]);
-  const [perPage, setPerPage] = useState(10);
+  const [perPage, setPerPage] = useState(20);
   const [page, setPage] = useState(1);
   useEffect(() => {
     if (data?.length === 0) {
@@ -67,7 +67,7 @@ const Table = ({ columns, data, handleDelete }) => {
         // fixedHeaderScrollHeight="100px"
         highlightOnHover
         pointerOnHover
-        paginationRowsPerPageOptions={[2, 5, 10, 15, 20]}
+        paginationRowsPerPageOptions={[10, 15, 20, 30, 40]}
         // onRowClicked={handleSelect}
         striped
         noDataComponent="Пока тут нет данных" //or your component
@@ -78,11 +78,8 @@ const Table = ({ columns, data, handleDelete }) => {
           setPerPage(e);
         }}
       />
-
     </div>
   );
 };
 
 export default Table;
-
-
