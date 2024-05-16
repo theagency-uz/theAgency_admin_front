@@ -33,6 +33,7 @@ const AddBlog = (props) => {
         if (!data) {
           router.back();
         }
+
         setBlog(data);
       }
       const fetchedCategories = await getLearningCategories();

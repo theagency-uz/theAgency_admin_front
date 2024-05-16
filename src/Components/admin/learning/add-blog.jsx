@@ -36,7 +36,7 @@ const AddBlog = ({ handleSubmit, blog, categories }) => {
   const [formLoading, setFormLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState(blog?.previewImage || "");
 
-  const [blocks, setBlocks] = useState(blog?.article_blocks || []);
+  const [blocks, setBlocks] = useState(blog?.learning_blocks || []);
 
   const [categoryOptions, setCategoryOptions] = useState(
     categories.map((c) => {
