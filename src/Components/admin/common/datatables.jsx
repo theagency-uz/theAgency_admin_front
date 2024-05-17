@@ -67,7 +67,7 @@ const Table = ({ columns, data, handleDelete }) => {
         // fixedHeaderScrollHeight="100px"
         highlightOnHover
         pointerOnHover
-        paginationRowsPerPageOptions={[5, 10, 15, 20, 30, 40]}
+        paginationRowsPerPageOptions={[10, 15, 20, 30, 40]}
         // onRowClicked={handleSelect}
         striped
         noDataComponent="Пока тут нет данных" //or your component
