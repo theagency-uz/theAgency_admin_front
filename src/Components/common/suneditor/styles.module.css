@@ -17,8 +17,8 @@
 
 .editor ul,
 .editor ol {
-  margin: 0;
-  padding: 0;
+  /* margin: 0;
+  padding: 0; */
 }
 .editor img {
   max-width: 100%;

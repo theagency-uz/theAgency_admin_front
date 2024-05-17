@@ -31,7 +31,6 @@ import ArticleBlock from "./articleBlock";
 import Sortable from "../common/sortable";
 
 const AddBlog = ({ handleSubmit, blog, categories }) => {
-  console.log(blog);
   const router = useRouter();
   const [formLoading, setFormLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState(blog?.previewImage || "");
