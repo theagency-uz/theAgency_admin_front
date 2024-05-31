@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 // import "ag-grid-community/styles/ag-grid.css";
 // import "ag-grid-community/styles/ag-theme-alpine.css";
 
-const Table = ({ columns, data, handleDelete }) => {
+const Table = ({ columns, data, handleDelete, sortId }) => {
   const router = useRouter();
   const [selectedRows, setSelectedRows] = useState([]);
   const [perPage, setPerPage] = useState(20);
@@ -77,6 +77,7 @@ const Table = ({ columns, data, handleDelete }) => {
         onChangeRowsPerPage={(e) => {
           setPerPage(e);
         }}
+        defaultSortFieldId={sortId}
       />
     </div>
   );

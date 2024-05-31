@@ -65,6 +65,7 @@ const Blogs = () => {
         sortable: true,
       },
       {
+        id: 'category',
         grow: 1,
         name: "Категория",
         selector: (row) => row.learning_category?.name?.ru || "",
@@ -141,6 +142,8 @@ const Blogs = () => {
         searchedBlogs.push(blog);
       } else if (blog.user.name.toString().toLowerCase().includes(value.toLowerCase())) {
         searchedBlogs.push(blog);
+      } else if (blog.learning_category?.name?.ru.toString().toLowerCase().includes(value.toLowerCase())) {
+        searchedBlogs.push(blog);
       } else if (blog.createdAt.toString().toLowerCase().includes(value.toLowerCase())) {
         searchedBlogs.push(blog);
       } else if (blog.updatedAt.toString().toLowerCase().includes(value.toLowerCase())) {
@@ -158,6 +161,7 @@ const Blogs = () => {
   if (loading) {
     return <Loading />;
   }
+
   return (
     <>
       <Head>
@@ -172,7 +176,7 @@ const Blogs = () => {
       >
         <Container maxWidth={false}>
           <TableToolbar handleSearch={handleSearch} title={"Стажировка"} link="/learning/add-blog" />
-          <DataTable data={blogs} columns={columns} handleDelete={handleDelete} />
+          <DataTable data={blogs} columns={columns} handleDelete={handleDelete} sortId="category" />
         </Container>
       </Box>
     </>
