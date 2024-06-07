@@ -19,6 +19,9 @@ import Loading from "../Loading";
 export default function SunEditor({ value = "", type = "", onChange }) {
   const [plugins, setPlugins] = useState();
 
+  /**
+   * @type {import("suneditor/src/options").SunEditorOptions} get type definitions for editor
+   */
   const editorOptions = {
     stickyToolbar: "64px",
     className: type === "modal" ? `${classes.editor} ${classes.modal}` : classes.editor,
@@ -37,7 +40,7 @@ export default function SunEditor({ value = "", type = "", onChange }) {
       ["imageGallery", "fullScreen"],
       [("showBlocks", "codeView")],
       ["bgColor"],
-      ["template"],
+      ["template", "embed"],
     ],
     imageRotation: true,
     fontSize: [12, 14, 16, 18, 20, 25, 30, 35, 40, 42, 45, 50],
@@ -1062,7 +1065,9 @@ export default function SunEditor({ value = "", type = "", onChange }) {
         "#CCCCCC",
       ],
     ],
+
     defaultStyle: "font-size:14px;",
+    addTagsWhitelist: "script",
     attributesWhitelist: {
       all: "class", // Apply to all tags
       div: "style|class|data-.+", // Apply to all tags
@@ -1071,6 +1076,7 @@ export default function SunEditor({ value = "", type = "", onChange }) {
       span: "style|class|data-.+", // Apply to all tags
       video: "*",
       iframe: "*",
+      blockquote: "*",
     },
     iframeAttributes: {
       allowfullscreen: true,
@@ -1112,6 +1118,7 @@ export default function SunEditor({ value = "", type = "", onChange }) {
       let tableAlign;
       let tableInvert;
       let gif;
+      let embedPlugin;
 
       bgColor = {
         name: "bgColor",
@@ -1412,11 +1419,12 @@ export default function SunEditor({ value = "", type = "", onChange }) {
         // arguments - (core : core object, targetElement : clicked button element)
         add: function (core, targetElement) {
           const context = core.context;
-
+          console.log({ targetElement });
           // @Required
           // Registering a namespace for caching as a plugin name in the context object
           context.tableInvert = {
             targetButton: targetElement,
+            tableElement: null,
           };
         },
 
@@ -1424,10 +1432,19 @@ export default function SunEditor({ value = "", type = "", onChange }) {
         // Plugins with active methods load immediately when the editor loads.
         // Called each time the selection is moved.
         active: function (element) {
+          console.log({ element });
+          console.log(element ? this.util.hasClass(element, "__se__tag__table__invert") : "");
           if (!element) {
+            console.log("remove");
+            this.context.tableInvert.tableElement = null;
             this.util.removeClass(this.context.tableInvert.targetButton, "active");
-          } else if (this.util.hasClass(element, "__se__tag__table__invert")) {
-            this.util.addClass(this.context.tableInvert.targetButton, "active");
+          } else if (/^TABLE$/i.test(element.nodeName)) {
+            if (this.util.hasClass(element, "__se__tag__table__invert")) {
+              this.util.addClass(this.context.tableInvert.targetButton, "active");
+            } else {
+              this.util.removeClass(this.context.tableInvert.targetButton, "active");
+            }
+            this.context.tableInvert.tableElement = element;
             return true;
           }
 
@@ -1441,13 +1458,15 @@ export default function SunEditor({ value = "", type = "", onChange }) {
 
           // const rangeTag = this.util.getParentElement(this.getSelectionNode(), "div");
 
-          if (this.util.hasClass(table, "__se__tag__table__invert")) {
+          if (!this.context.tableInvert.tableElement) return;
+
+          if (this.util.hasClass(this.context.tableInvert.targetButton, "active")) {
             this.util.removeClass(table, "__se__tag__table__invert");
           } else {
             this.util.addClass(table, "__se__tag__table__invert");
           }
           // console.log("content: ", this.getContents());
-          this.setContents(this.getContents());
+          // this.setContents(this.getContents());
         },
       };
 
@@ -1509,7 +1528,120 @@ export default function SunEditor({ value = "", type = "", onChange }) {
         },
       };
 
-      setPlugins([...Object.values(tempPlugins), bgColor, tableAlign, tableInvert, gif]);
+      embedPlugin = {
+        name: "embed",
+        display: "submenu",
+        title: "Embed",
+        buttonClass: "",
+        innerHTML:
+          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>',
+        add: function (core, targetElement) {
+          const context = core.context;
+          context.customSubmenu = {
+            targetButton: targetElement,
+            textElement: null,
+            currentSpan: null,
+          };
+
+          // Generate submenu HTML
+          // Always bind "core" when calling a plugin function
+          let listDiv = this.setSubmenu(core);
+
+          // Input tag caching
+          context.customSubmenu.textElement = listDiv.querySelector("input");
+
+          // You must bind "core" object when registering an event.
+          /** add event listeners */
+          listDiv
+            .querySelector(".se-btn-primary")
+            .addEventListener("click", this.onClick.bind(core));
+
+          // @Required
+          // You must add the "submenu" element using the "core.initMenuTarget" method.
+          /** append target button menu */
+          core.initMenuTarget(this.name, targetElement, listDiv);
+        },
+
+        setSubmenu: function (core) {
+          const listDiv = core.util.createElement("DIV");
+          // @Required
+          // A "se-submenu" class is required for the top level element.
+          listDiv.className = "se-menu-container se-submenu se-list-layer";
+          listDiv.innerHTML =
+            "" +
+            '<div class="se-list-inner">' +
+            '<ul class="se-list-basic" style="width: 230px;">' +
+            "<li>" +
+            '<div class="se-form-group">' +
+            '<input class="se-input-form" type="text" placeholder="insert text" style="border: 1px solid #CCC;" />' +
+            '<button type="button" class="se-btn-primary se-tooltip">' +
+            "<strong>OK</strong>" +
+            '<span class="se-tooltip-inner">' +
+            '<span class="se-tooltip-text">Append span</span>' +
+            "</span>" +
+            "</button>" +
+            "</div>" +
+            "</li>" +
+            "</ul>" +
+            "</div>";
+
+          return listDiv;
+        },
+
+        // @Override core
+        // Plugins with active methods load immediately when the editor loads.
+        // Called each helpers the selection is moved.
+        active: function (element) {
+          // If no tag matches, the "element" argument is called with a null value.
+          if (!element) {
+            this.util.removeClass(this.context.customSubmenu.targetButton, "active");
+            this.context.customSubmenu.textElement.value = "";
+            this.context.customSubmenu.currentSpan = null;
+          } else if (this.util.hasClass(element, "__se__tag__embed_placeholder")) {
+            this.util.addClass(this.context.customSubmenu.targetButton, "active");
+            this.context.customSubmenu.textElement.value = element.textContent;
+            this.context.customSubmenu.currentSpan = element;
+            return true;
+          }
+
+          return false;
+        },
+
+        // @Override submenu
+        // Called after the submenu has been rendered
+        on: function () {
+          this.context.customSubmenu.textElement.focus();
+        },
+
+        onClick: function () {
+          const value = this.context.customSubmenu.textElement.value.trim();
+          if (!value) return;
+
+          const span = this.context.customSubmenu.currentSpan;
+          if (span) {
+            span.textContent = value;
+            this.setRange(span, 1, span, 1);
+          } else {
+            this.functions.insertHTML(
+              `<div class="__se__tag__embed_placeholder" data-embed="${encodeURI(
+                value
+              )}"><strong>[CUSTOM EMBED]</strong></div>`,
+              true
+            );
+            this.context.customSubmenu.textElement.value = "";
+          }
+
+          this.submenuOff();
+        },
+      };
+      setPlugins([
+        ...Object.values(tempPlugins),
+        bgColor,
+        tableAlign,
+        tableInvert,
+        gif,
+        embedPlugin,
+      ]);
     }
     importFunc();
   }, []);
