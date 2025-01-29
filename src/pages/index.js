@@ -4,7 +4,6 @@ import { DashboardLayout } from "src/layout";
 
 import WithAuth from "src/HOC/withAuth";
 
-
 const Dashboard = ({ ...props }) => {
   return (
     <>
@@ -18,15 +17,11 @@ const Dashboard = ({ ...props }) => {
           py: 8,
         }}
       >
-        <Container maxWidth={false}>
-
-        </Container>
+        <Container maxWidth={false}></Container>
       </Box>
     </>
   );
 };
-
-
 
 Dashboard.getLayout = (page) => {
   return <DashboardLayout>{page}</DashboardLayout>;

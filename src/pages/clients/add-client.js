@@ -9,78 +9,53 @@ import Loading from "src/Components/admin/common/Loading";
 
 import WithAuth from "src/HOC/withAuth";
 
-import {
-  addArticle,
-  getArticle,
-  updateArticle,
-  getArticleCategories,
-  getArticleAsAdmin,
-} from "src/services/article";
 import { getUser } from "src/services/auth";
-import AddWorkForm from "src/Components/admin/work/add-work";
-import { addWork, getWorkById, getWorkCategories, updateWork } from "src/services/work";
+import AddClientsForm from "src/Components/admin/clients/add-client";
+import { getClientsServices, addClient, getClientById, updateClients } from "src/services/clients";
 
-const AddBlog = (props) => {
+const AddClient = (props) => {
   const router = useRouter();
-  const [work, setWork] = useState();
+  const [clients, setClients] = useState();
   const [loading, setLoading] = useState(true);
-  const [categories, setCategories] = useState([]);
+  const [services, setServices] = useState([]);
   const id = router.query.id;
   useEffect(() => {
     if (!router.isReady) {
       return;
     }
-    async function fetchWork() {
+    async function fetchClients() {
       if (id) {
-        const data = await getWorkById(id);
+        const data = await getClientById(id);
         if (!data) {
           router.back();
         }
-        setWork(data);
+        setClients(data);
       }
-      const fetchedCategories = await getWorkCategories();
-      setCategories(fetchedCategories);
+      const fetchedServices = await getClientsServices();
+      setServices(fetchedServices);
       setLoading(false);
     }
-    fetchWork();
+    fetchClients();
   }, [router.query.id]);
 
-  async function handleSubmit({
-    name,
-    slug,
-    description,
-    image,
-    type,
-    order,
-    category,
-    isActive,
-    isNewPage,
-  }) {
-    if (work) {
-      const result = await updateWork({
+  async function handleSubmit({ title, image, order, service, isActive }) {
+    if (clients) {
+      const result = await updateClients({
         id,
-        name,
-        slug,
-        description,
+        title,
         image,
-        type,
         order,
-        category,
+        service,
         isActive,
-        isNewPage,
       });
       return result;
     }
-    const result = await addWork({
-      name,
-      slug,
-      description,
+    const result = await addClient({
+      title,
       image,
-      type,
       order,
-      category,
+      service,
       isActive,
-      isNewPage,
     });
 
     return result;
@@ -105,7 +80,7 @@ const AddBlog = (props) => {
             {id ? "Редактировать работу" : "Создать работу"}
           </Typography>
           <Box sx={{ pt: 3 }}>
-            <AddWorkForm handleSubmit={handleSubmit} work={work} categories={categories} />
+            <AddClientsForm handleSubmit={handleSubmit} clients={clients} services={services} />
           </Box>
         </Container>
       </Box>
@@ -113,6 +88,6 @@ const AddBlog = (props) => {
   );
 };
 
-AddBlog.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+AddClient.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
-export default WithAuth(AddBlog);
+export default WithAuth(AddClient);

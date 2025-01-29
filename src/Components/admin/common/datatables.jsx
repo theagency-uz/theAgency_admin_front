@@ -56,29 +56,31 @@ const Table = ({ columns, data, handleDelete, sortId }) => {
 
       {/* <AgGridReact columnDefs={columns} rowData={data}></AgGridReact> */}
 
-      <DataTable
-        pagination={true}
-        data={data}
-        columns={columns}
-        selectableRows
-        onSelectedRowsChange={handleRowSelected}
-        paginationDefaultPage={page}
-        paginationPerPage={perPage}
-        // fixedHeaderScrollHeight="100px"
-        highlightOnHover
-        pointerOnHover
-        paginationRowsPerPageOptions={[10, 15, 20, 30, 40]}
-        // onRowClicked={handleSelect}
-        striped
-        noDataComponent="Пока тут нет данных" //or your component
-        onChangePage={(e) => {
-          setPage(e);
-        }}
-        onChangeRowsPerPage={(e) => {
-          setPerPage(e);
-        }}
-        defaultSortFieldId={sortId}
-      />
+      {Array.isArray(data) && (
+        <DataTable
+          pagination={true}
+          data={data}
+          columns={columns}
+          selectableRows
+          onSelectedRowsChange={handleRowSelected}
+          paginationDefaultPage={page}
+          paginationPerPage={perPage}
+          // fixedHeaderScrollHeight="100px"
+          highlightOnHover
+          pointerOnHover
+          paginationRowsPerPageOptions={[10, 15, 20, 30, 40]}
+          // onRowClicked={handleSelect}
+          striped
+          noDataComponent="Пока тут нет данных" //or your component
+          onChangePage={(e) => {
+            setPage(e);
+          }}
+          onChangeRowsPerPage={(e) => {
+            setPerPage(e);
+          }}
+          defaultSortFieldId={sortId}
+        />
+      )}
     </div>
   );
 };

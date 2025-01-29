@@ -14,16 +14,14 @@ import Loading from "src/Components/admin/common/Loading";
 import WithAuth from "src/HOC/withAuth";
 
 import { imageBaseUrl } from "src/utils/endpoint";
-
 import {
-  getArticles,
-  deleteArticle,
-  deleteBulkArticle,
-  getArticlesAsAdmin,
-} from "src/services/article";
-import { deleteBulkWork, deleteWork, getWorks, getWorksAsAdmin } from "src/services/work";
+  deleteClient,
+  getClients,
+  getClientsAsAdmin,
+  deleteBulkClient,
+} from "src/services/clients";
 
-const Works = () => {
+const Clients = () => {
   const columns = useMemo(
     () => [
       {
@@ -70,7 +68,7 @@ const Works = () => {
         name: "Ссылка",
         selector: (row) => row.slug,
         cell: (row) => (
-          <Link href={`/works/${row.slug}`} passHref>
+          <Link href={`/clients/${row.slug}`} passHref>
             {row.slug}
           </Link>
         ),
@@ -79,10 +77,10 @@ const Works = () => {
       {
         grow: 1,
         name: "Категории",
-        selector: (row) => row.spheres.map((s) => s.name.ru).join(", "),
+        selector: (row) => row.services.map((s) => s.name.ru).join(", "),
         cell: (row) => (
-          <div title={row.spheres.map((s) => s.name.ru).join(", ")}>
-            {row.spheres.map((s) => s.name.ru).join(", ")}
+          <div title={row.services.map((s) => s.name.ru).join(", ")}>
+            {row.services.map((s) => s.name.ru).join(", ")}
           </div>
         ),
         sortable: true,
@@ -120,17 +118,17 @@ const Works = () => {
         cell: (row) => {
           const handleDelete = async (e) => {
             e.stopPropagation(); // don't select this row after clicking
-            const check = confirm("Удалить работу?");
+            const check = confirm("Удалить клиента?");
             if (check) {
-              await deleteWork(row.id);
-              const updatedWorks = await getWorksAsAdmin();
-              setWorks([...updatedWorks]);
+              await deleteClient(row.id);
+              const updatedClients = await getClientsAsAdmin();
+              setClients([...updatedClients]);
             }
           };
           return (
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
               <Button sx={{ padding: "5px" }}>
-                <Link href={`/works/add-work?id=${row.id}`} passHref>
+                <Link href={`/clients/add-client?id=${row.id}`} passHref>
                   <EditIcon />
                 </Link>
               </Button>
@@ -147,20 +145,20 @@ const Works = () => {
     ],
     []
   );
-
-  const [works, setWorks] = useState([]);
+  const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     async function fetchBlogs() {
-      const allWorks = await getWorksAsAdmin();
-      setWorks(allWorks);
+      const allClients = await getClientsAsAdmin();
+      setClients(allClients);
       setLoading(false);
     }
     fetchBlogs();
   }, []);
+
   async function handleSearch(e) {
     const value = e.target.value;
-    const allWorks = await getWorksAsAdmin();
+    const allWorks = await getClientsAsAdmin();
     const searchedWorks = [];
     allWorks.forEach((work) => {
       if (work.id.toString().toLowerCase().includes(value.toLowerCase())) {
@@ -179,17 +177,18 @@ const Works = () => {
     return "search";
   }
   async function handleDelete(selectedRows) {
-    const result = await deleteBulkWork([...selectedRows.map((r) => r.id)]);
-    const allWorks = await getWorksAsAdmin();
-    setWorks(allWorks);
+    const result = await deleteBulkClient([...selectedRows.map((r) => r.id)]);
+    const allClients = await getClientsAsAdmin();
+    setClients(allClients);
   }
   if (loading) {
     return <Loading />;
   }
+
   return (
     <>
       <Head>
-        <title>Работы | Админ</title>
+        <title>Клиенты | Админ</title>
       </Head>
       <Box
         component="main"
@@ -199,14 +198,14 @@ const Works = () => {
         }}
       >
         <Container maxWidth={false}>
-          <TableToolbar handleSearch={handleSearch} title={"Работы"} link="/works/add-work" />
-          <DataTable data={works} columns={columns} handleDelete={handleDelete} />
+          <TableToolbar handleSearch={handleSearch} title={"Клиенты"} link="/clients/add-client" />
+          {<DataTable data={clients} columns={columns} handleDelete={handleDelete} />}
         </Container>
       </Box>
     </>
   );
 };
 
-Works.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+Clients.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
-export default WithAuth(Works);
+export default WithAuth(Clients);
